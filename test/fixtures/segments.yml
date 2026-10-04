@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  line_code: 1
+  from_code: 1
+  to_code: 1
+
+two:
+  line_code: 1
+  from_code: 1
+  to_code: 1
