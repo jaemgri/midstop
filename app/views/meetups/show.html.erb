@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<% end %>
+
 <% names = @group_codes.map { |code| @origins.dig(code, :name) }.compact %>
 <% best, *others = @results %>
 
@@ -19,6 +23,13 @@
       <span class="text-2xl font-bold tabular-nums"><%= best.longest %> min</span>
     </div>
   </section>
+
+  <div data-controller="route-map"
+       data-route-map-data-value="<%= @map_data.to_json %>"
+       class="isolate mt-4 h-72 overflow-hidden rounded-3xl border border-rail bg-sign"
+       role="img"
+       aria-label="Map of everyone's route to <%= best.romaji || best.name %>"></div>
+
 
   <section class="mt-8">
     <h2 class="font-bold">Everyone's trip</h2>

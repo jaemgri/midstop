@@ -7,6 +7,11 @@ class Station < ApplicationRecord
       .to_h { |group, name, romaji| [group, { name: name, romaji: romaji }] }
   end
 
+    # Average position of every platform in a station group, as [lat, lon]
+  def self.center_of(group_code)
+    where(group_code: group_code).pick(Arel.sql("AVG(lat)"), Arel.sql("AVG(lon)"))
+  end
+
   # Matches kanji, kana or romaji. Names starting with the query come first, then bigger stations.
   def self.search(query, limit: 8)
     raw = query.to_s.strip

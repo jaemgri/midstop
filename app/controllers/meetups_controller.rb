@@ -20,11 +20,27 @@ class MeetupsController < ApplicationController
 
     @origins = Station.labels_for(@group_codes)
     @results = MidpointFinder.new(@group_codes).call(limit: 5)
+    @map_data = build_map_data(@results.first)
   rescue KeyError
     redirect_to root_path, alert: "couldn't find one of those stations, try picking it again"
   end
 
   private
+
+  def build_map_data(best)
+    return nil if best.nil?
+
+    graph = TransitGraph.instance
+    {
+      meeting: { name: best.name, romaji: best.romaji, coords: Station.center_of(best.group_code) },
+      people: @group_codes.map do |code|
+        {
+          name: @origins.dig(code, :romaji) || @origins.dig(code, :name),
+          path: graph.path_between(code, best.group_code)
+        }
+      end
+    }
+  end
 
   # Each form row sends a picked code (from[]) and the typed text (names[]).
   # Use the picked code if there is one, otherwise the best match for the text.
