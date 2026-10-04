@@ -1,0 +1,34 @@
+<%= link_to "← change stations", root_path, class: "text-sm text-gray-500 hover:text-gray-900" %>
+
+<h1 class="mt-4 text-4xl font-extrabold tracking-tight">fairest spots</h1>
+<p class="mt-2 text-gray-600">
+  for <%= @group_codes.map { |code| @origins.dig(code, :name) }.compact.join(" · ") %>
+</p>
+
+<div class="mt-8 space-y-4">
+  <% @results.each_with_index do |result, index| %>
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 <%= 'ring-2 ring-gray-900' if index.zero? %>">
+      <div class="flex items-baseline justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <%= index.zero? ? "fairest" : "option #{index + 1}" %>
+          </p>
+          <p class="text-2xl font-bold"><%= result.name %></p>
+          <p class="text-sm text-gray-500"><%= result.romaji %></p>
+        </div>
+        <p class="shrink-0 text-right text-sm text-gray-600">
+          longest trip<br><span class="text-xl font-bold text-gray-900"><%= result.longest %> min</span>
+        </p>
+      </div>
+
+      <ul class="mt-4 space-y-1 text-sm">
+        <% @group_codes.each_with_index do |code, person| %>
+          <li class="flex justify-between">
+            <span>from <%= @origins.dig(code, :name) %> <span class="text-gray-400"><%= @origins.dig(code, :romaji) %></span></span>
+            <span class="font-semibold"><%= result.minutes[person] %> min</span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

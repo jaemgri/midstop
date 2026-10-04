@@ -12,14 +12,23 @@ namespace :ekidata do
     end
     read = ->(prefix) { CSV.foreach(find_file.(prefix), headers: true, encoding: "bom|utf-8") }
 
+    # Hiragana readings from station_database (CC BY 4.0), keyed by Ekidata station code
+    kana_by_code = read.("kana_station").to_h { |row| [row["code"].to_i, row["name_kana"]] }
+
     stations = read.("station").filter_map do |row|
       next unless row["e_status"] == "0" && PREFS.include?(row["pref_cd"].to_i)
 
+      code = row["station_cd"].to_i
+      kana = kana_by_code[code]
+      romaji = kana.present? ? KanaRomanizer.romanize(kana) : nil
+
       {
-        code: row["station_cd"].to_i,
+        code: code,
         group_code: row["station_g_cd"].to_i,
         name: row["station_name"],
-        name_romaji: row["station_name_r"],
+        name_kana: kana,
+        name_romaji: romaji,
+        search_key: romaji && KanaRomanizer.search_key(romaji),
         line_code: row["line_cd"].to_i,
         pref_code: row["pref_cd"].to_i,
         lat: row["lat"].to_f,
@@ -53,6 +62,8 @@ namespace :ekidata do
       Segment.insert_all!(segments)
     end
 
+    missing = stations.count { |s| s[:name_kana].nil? }
     puts "Imported #{lines.size} lines, #{stations.size} stations, #{segments.size} segments"
+    puts "#{missing} stations have no reading (still searchable in kanji)" if missing.positive?
   end
 end
