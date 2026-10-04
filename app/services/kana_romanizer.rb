@@ -69,6 +69,41 @@ module KanaRomanizer
     simplify_long_vowels(ascii).gsub(/m(?=[bp])/, "n")
   end
 
+    CHOME = {
+    "一" => "いっちょうめ", "二" => "にちょうめ", "三" => "さんちょうめ",
+    "四" => "よんちょうめ", "五" => "ごちょうめ", "六" => "ろくちょうめ",
+    "七" => "ななちょうめ", "八" => "はっちょうめ", "九" => "きゅうちょうめ"
+  }.freeze
+
+  # Romanizes with a hyphen where the name contains another station's name:
+  # 新宿三丁目 -> "Shinjuku-sanchome", 東中野 -> "Higashi-nakano"
+  def romanize_name(name, kana, kana_by_name)
+    parts = split_reading(name, to_hiragana(kana), kana_by_name)
+    parts.map { |part| romanize(part).downcase }.join("-").capitalize
+  end
+
+  def split_reading(name, kana, kana_by_name)
+    if (number = name[/([一二三四五六七八九])丁目\z/, 1]) && kana.end_with?(CHOME[number])
+      return [kana.delete_suffix(CHOME[number]), CHOME[number]].reject(&:empty?)
+    end
+
+    (1...name.length).each do |i|
+      head, tail = name[0...i], name[i..]
+
+      head_kana = kana_by_name[head]
+      if head_kana && kana.start_with?(head_kana) && kana.length > head_kana.length
+        return [head_kana, kana.delete_prefix(head_kana)]
+      end
+
+      tail_kana = kana_by_name[tail]
+      if tail_kana && kana.end_with?(tail_kana) && kana.length > tail_kana.length
+        return [kana.delete_suffix(tail_kana), tail_kana]
+      end
+    end
+
+    [kana]
+  end
+
   def to_hiragana(text)
     text.tr("ァ-ヶ", "ぁ-ゖ")
   end

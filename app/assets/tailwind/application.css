@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Zen Kaku Gothic New", "Hiragino Sans", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+
+  --color-platform: #eef0f2;
+  --color-sign: #ffffff;
+  --color-ink: #1b2533;
+  --color-steel: #5d6876;
+  --color-rail: #d6dbe1;
+  --color-tactile: #f4c300;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  summary:focus-visible {
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* The yellow dotted tactile paving strip from Japanese platform edges */
+  .tactile {
+    background-color: var(--color-tactile);
+    background-image: radial-gradient(circle, rgb(27 37 51 / 0.18) 1.6px, transparent 2px);
+    background-size: 9px 9px;
+  }
+}

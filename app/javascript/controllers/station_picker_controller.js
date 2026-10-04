@@ -35,13 +35,13 @@ export default class extends Controller {
     stations.forEach((station) => {
       const button = document.createElement("button")
       button.type = "button"
-      button.className = "flex w-full items-baseline justify-between gap-3 px-4 py-2 text-left hover:bg-gray-100"
+            button.className = "flex w-full items-baseline justify-between gap-3 px-4 py-3 text-left hover:bg-platform"
 
       const label = document.createElement("span")
       label.textContent = `${station.name} ${station.romaji ?? ""}`
 
       const lines = document.createElement("span")
-      lines.className = "text-xs text-gray-500"
+      lines.className = "text-xs text-steel"
       lines.textContent = `${station.lines} ${station.lines === 1 ? "line" : "lines"}`
 
       button.append(label, lines)

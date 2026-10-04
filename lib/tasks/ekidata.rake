@@ -15,12 +15,18 @@ namespace :ekidata do
     # Hiragana readings from station_database (CC BY 4.0), keyed by Ekidata station code
     kana_by_code = read.("kana_station").to_h { |row| [row["code"].to_i, row["name_kana"]] }
 
+    # Every station's reading by kanji name, used to hyphenate compound names
+    kana_by_name = read.("station").each_with_object({}) do |row, map|
+      kana = kana_by_code[row["station_cd"].to_i]
+      map[row["station_name"]] ||= KanaRomanizer.to_hiragana(kana) if kana.present?
+    end
+
     stations = read.("station").filter_map do |row|
       next unless row["e_status"] == "0" && PREFS.include?(row["pref_cd"].to_i)
 
       code = row["station_cd"].to_i
       kana = kana_by_code[code]
-      romaji = kana.present? ? KanaRomanizer.romanize(kana) : nil
+      romaji = kana.present? ? KanaRomanizer.romanize_name(row["station_name"], kana, kana_by_name) : nil
 
       {
         code: code,

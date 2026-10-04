@@ -1,7 +1,8 @@
-<h1 class="text-4xl font-extrabold tracking-tight">where should we meet?</h1>
-<p class="mt-3 text-gray-600">add everyone's nearest station and midstop finds the spot that's fairest for the whole group.</p>
+<h1 class="text-4xl sm:text-5xl font-black leading-tight tracking-tight">Where should we meet?</h1>
+<p class="mt-3 text-lg text-steel">Add the station each person is coming from. midstop finds the stop where nobody's trip is too long.</p>
 
-<%= form_with url: meet_path, method: :get, data: { controller: "people" }, class: "mt-8" do %>
+<%= form_with url: meet_path, method: :get, data: { controller: "people" },
+      class: "mt-8 rounded-3xl border border-rail bg-sign p-5" do %>
   <div data-people-target="list" class="space-y-3">
     <%= render "person_row" %>
     <%= render "person_row" %>
@@ -12,8 +13,8 @@
   </template>
 
   <button type="button" data-action="people#add"
-          class="mt-3 text-sm font-semibold text-gray-600 hover:text-gray-900">+ add someone</button>
+          class="mt-4 font-medium text-steel hover:text-ink">+ Add a person</button>
 
-  <%= submit_tag "find the fairest station", name: nil,
-        class: "mt-6 w-full rounded-full bg-gray-900 py-4 text-lg font-bold text-white hover:bg-gray-700 cursor-pointer" %>
+  <%= submit_tag "Find the fairest station", name: nil,
+        class: "mt-6 w-full rounded-full bg-ink py-4 text-lg font-bold text-white hover:bg-steel transition-colors cursor-pointer" %>
 <% end %>

@@ -1,0 +1,28 @@
+<%= turbo_frame_tag "nearby" do %>
+  <% if @places.nil? %>
+    <p class="mt-3 text-steel">Couldn't load nearby places right now. Try refreshing in a minute.</p>
+  <% elsif @places.empty? %>
+    <p class="mt-3 text-steel">No cafés or restaurants are mapped close to this station yet.</p>
+  <% else %>
+    <% @places.each do |category, places| %>
+      <h3 class="mt-5 text-sm font-bold text-steel"><%= category %></h3>
+      <ul class="mt-2 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+        <% places.each do |place| %>
+          <li>
+            <%= link_to "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode("#{place.name} #{@station[:name]}")}",
+                  target: "_blank", rel: "noopener",
+                  class: "flex items-baseline justify-between gap-4 px-5 py-3 hover:bg-platform" do %>
+              <span class="min-w-0">
+                <span class="block truncate"><%= place.name %></span>
+                <% if place.name_en.present? && place.name_en != place.name %>
+                  <span class="block truncate text-sm text-steel"><%= place.name_en %></span>
+                <% end %>
+              </span>
+              <span class="shrink-0 text-sm text-steel tabular-nums"><%= place.walk_minutes %> min walk</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>

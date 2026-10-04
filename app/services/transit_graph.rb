@@ -68,15 +68,7 @@ class TransitGraph
   private
 
   def ride_minutes(a, b)
-    [MIN_RIDE_MINUTES, (haversine_km(*a, *b) * MINUTES_PER_KM).round(1)].max
+    [MIN_RIDE_MINUTES, (Geo.distance_km(*a, *b) * MINUTES_PER_KM).round(1)].max
   end
 
-  # Straight-line distance between two lat/lon points on Earth's surface.
-  def haversine_km(lat1, lon1, lat2, lon2)
-    rad = Math::PI / 180
-    dlat = (lat2 - lat1) * rad
-    dlon = (lon2 - lon1) * rad
-    h = Math.sin(dlat / 2)**2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dlon / 2)**2
-    6371 * 2 * Math.asin(Math.sqrt(h))
-  end
 end

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+  <meta name="theme-color" content="#eef0f2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
     <title><%= content_for(:title) || "Midstop" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,17 +23,21 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-  <body class="bg-gray-50 text-gray-900 min-h-screen">
-    <main class="max-w-xl mx-auto px-5 py-10">
-      <% if alert %>
-        <p class="mb-6 rounded-xl bg-red-50 text-red-700 px-4 py-3"><%= alert %></p>
-      <% end %>
-      <%= yield %>
-    </main>
+  <body class="bg-platform text-ink font-sans antialiased min-h-dvh">
+  <header class="max-w-xl mx-auto px-5 pt-6">
+    <%= link_to "midstop", root_path, class: "text-lg font-black tracking-tight" %>
+  </header>
+
+  <main class="max-w-xl mx-auto px-5 pt-6 pb-16">
+    <% if alert %>
+      <p class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-red-800"><%= alert %></p>
+    <% end %>
+    <%= yield %>
+  </main>
   </body>
 </html>
