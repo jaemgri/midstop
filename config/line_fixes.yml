@@ -1,0 +1,17 @@
+# station_database lists each line's stations in order, which is enough for straight lines.
+# Loops and branches need a few links added or removed by hand.
+# Each entry is [line code, station, station], using station names from station.csv.
+
+add:
+  - [11302, 品川, 大崎]             # JR Yamanote: the loop closes between Shinagawa and Osaki
+  - [99301, 新宿, 都庁前]           # Toei Oedo: the loop closes at Tochomae...
+  - [99301, 都庁前, 西新宿五丁目]   # ...where the branch to Hikarigaoka begins
+  - [11303, 尻手, 八丁畷]           # JR Nambu: the Hama-Kawasaki branch leaves at Shitte
+  - [11327, 下総松崎, 成田]         # JR Narita: the Abiko branch joins at Narita
+  - [28002, 中野坂上, 中野新橋]     # Marunouchi: the Honancho branch leaves at Nakano-sakaue
+
+remove:
+  - [99301, 新宿, 西新宿五丁目]     # not neighbours: the list jumps from the loop to the branch
+  - [11303, 立川, 八丁畷]           # end of the main line to start of the branch
+  - [11327, 銚子, 我孫子]           # same
+  - [28002, 荻窪, 中野新橋]         # same
