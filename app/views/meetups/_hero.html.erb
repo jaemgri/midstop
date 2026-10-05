@@ -1,0 +1,25 @@
+<%
+  lines = [
+    { d: "M40 24 H114 L200 110",   color: "#9ACD32", start: [40, 24] },
+    { d: "M330 36 H274 L200 110",  color: "#F39700", start: [330, 36] },
+    { d: "M24 196 H114 L200 110",  color: "#E60012", start: [24, 196] },
+    { d: "M336 184 H274 L200 110", color: "#8F76D6", start: [336, 184] }
+  ]
+%>
+<div class="pointer-events-none absolute -right-1 -top-2 w-32 rotate-6 rounded-3xl border-2 border-ink bg-sign p-2 shadow-[4px_4px_0_0_var(--color-ink)] sm:w-40"
+     aria-hidden="true">
+  <svg viewBox="0 0 360 220" class="block h-auto w-full">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <% lines.each do |line| %>
+        <path d="<%= line[:d] %>" stroke="#ffffff" stroke-width="26" />
+        <path d="<%= line[:d] %>" stroke="<%= line[:color] %>" stroke-width="16" />
+      <% end %>
+    </g>
+    <% lines.each do |line| %>
+      <circle cx="<%= line[:start][0] %>" cy="<%= line[:start][1] %>" r="16" fill="#ffffff"
+              stroke="<%= line[:color] %>" stroke-width="7" />
+    <% end %>
+    <circle cx="200" cy="110" r="38" fill="#f4c300" opacity="0.35" class="hero-pulse" />
+    <circle cx="200" cy="110" r="24" fill="#f4c300" stroke="#1b2533" stroke-width="6" />
+  </svg>
+</div>

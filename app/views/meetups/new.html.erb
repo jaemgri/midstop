@@ -1,13 +1,21 @@
-<h1 class="text-4xl sm:text-5xl font-black leading-tight tracking-tight">Where should we meet?</h1>
-<p class="mt-3 text-lg text-steel">Add the station each person is coming from. midstop finds the stop where nobody's trip is too long.</p>
+<section class="relative pt-2">
+  <%= render "hero" %>
+  <h1 class="pr-32 text-5xl font-black leading-[0.95] tracking-tight sm:pr-40 sm:text-6xl">
+    where we<br><span class="highlight">meeting?</span>
+  </h1>
+  <p class="mt-4 max-w-sm text-lg text-steel">
+    drop everyone's station. we'll find the stop where nobody's stuck on a 50 min train.
+  </p>
+</section>
 
 <% if home_station %>
   <p class="mt-6 text-sm text-steel">Starting from your home station, <%= home_station[:name] %>. <%= link_to "Change", you_path, class: "font-medium text-ink underline" %></p>
 <% else %>
   <p class="mt-6 text-sm text-steel"><%= link_to "Set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
 <% end %>
+
 <%= form_with url: meet_path, method: :get, data: { controller: "people" },
-      class: "mt-8 rounded-3xl border border-rail bg-sign p-5" do %>
+      class: "mt-4 rounded-3xl border border-rail bg-sign p-5" do %>
   <div data-people-target="list" class="space-y-3">
     <% rows = @prefill.presence || [home_station].compact %>
     <% rows.each do |station| %>
@@ -25,6 +33,27 @@
   <button type="button" data-action="people#add"
           class="mt-4 font-medium text-steel hover:text-ink">+ Add a person</button>
 
-  <%= submit_tag "Find the fairest station", name: nil,
-        class: "mt-6 w-full rounded-full bg-ink py-4 text-lg font-bold text-white hover:bg-steel transition-colors cursor-pointer" %>
+  <%= submit_tag "find our spot", name: nil,
+        class: "btn-pop mt-6 w-full rounded-full py-4 text-lg font-black cursor-pointer" %>
+<% end %>
+
+<% if @first_visit %>
+  <section class="mt-10" aria-labelledby="how-it-works">
+    <h2 id="how-it-works" class="font-bold">how it works</h2>
+    <ol class="mt-4 space-y-4">
+      <% [
+        ["add everyone's station", "type it in english or 日本語, or tap the location button."],
+        ["get the fairest stop", "nobody gets stuck with a way longer trip than everyone else."],
+        ["send it to the chat", "share the result, then find food or drinks nearby."]
+      ].each_with_index do |(title, text), index| %>
+        <li class="flex gap-4">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] border-ink bg-sign text-sm font-black tabular-nums" aria-hidden="true"><%= index + 1 %></span>
+          <div>
+            <p class="font-bold"><%= title %></p>
+            <p class="text-steel"><%= text %></p>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  </section>
 <% end %>

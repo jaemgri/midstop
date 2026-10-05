@@ -5,6 +5,7 @@ class MeetupsController < ApplicationController
     codes = Array(params[:from]).map(&:to_i).select(&:positive?).first(MAX_PEOPLE)
     labels = Station.labels_for(codes)
     @prefill = codes.filter_map { |code| labels[code]&.merge(group_code: code) }
+    @first_visit = recent_searches.empty?
   end
 
   def show
