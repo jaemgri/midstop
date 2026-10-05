@@ -43,4 +43,14 @@ class Station < ApplicationRecord
       .pluck(:group_code, Arel.sql("MIN(name)"), Arel.sql("MIN(name_romaji)"), Arel.sql("COUNT(*)"))
       .map { |group, name, romaji, lines| { group_code: group, name: name, romaji: romaji, lines: lines } }
   end
+
+  # The station closest to a point, as [group_code, lat, lon]
+  def self.nearest_to(lat, lon)
+    lon_scale = Math.cos(lat * Math::PI / 180)
+    distance = sanitize_sql_array([
+      "(lat - ?) * (lat - ?) + ((lon - ?) * ?) * ((lon - ?) * ?)",
+      lat, lat, lon, lon_scale, lon, lon_scale
+    ])
+    order(Arel.sql(distance)).pick(:group_code, :lat, :lon)
+  end
 end

@@ -3,6 +3,7 @@
 <div data-person
      data-controller="station-picker"
      data-station-picker-url-value="<%= stations_path %>"
+     data-station-picker-nearest-url-value="<%= nearest_station_path %>"
      data-action="click@window->station-picker#closeOnOutside"
      class="relative flex gap-2">
   <input type="text" autocomplete="off" name="names[]"
@@ -13,9 +14,15 @@
          data-action="input->station-picker#search keydown.esc->station-picker#close"
          class="flex-1 min-w-0 rounded-2xl border border-rail bg-platform px-4 py-3 text-base placeholder:text-steel">
   <input type="hidden" name="from[]" value="<%= station&.dig(:group_code) %>" data-station-picker-target="value">
+  <button type="button" data-action="station-picker#locate"
+          class="px-2 text-steel hover:text-ink" aria-label="Use my location">
+    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    </svg>
+  </button>
   <button type="button" data-action="people#remove"
           class="px-3 text-steel hover:text-ink" aria-label="Remove this person">✕</button>
 
   <div data-station-picker-target="list" hidden
-       class="absolute left-0 right-12 top-full z-10 mt-1 overflow-hidden rounded-2xl border border-rail bg-sign shadow-lg"></div>
+       class="absolute left-0 right-20 top-full z-10 mt-1 overflow-hidden rounded-2xl border border-rail bg-sign shadow-lg"></div>
 </div>

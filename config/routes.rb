@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   root "meetups#new"
   get "meet", to: "meetups#show", as: :meet
+  get "stations/nearest", to: "stations#nearest", as: :nearest_station
   resources :stations, only: :index
   get "places/:group_code", to: "places#show", as: :places
   resources :saved_spots, only: [:create, :destroy], param: :group_code

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["input", "value", "list"]
-  static values = { url: String }
+  static values = { url: String, nearestUrl: String }
 
   connect() {
     this.requestId = 0
@@ -64,5 +64,34 @@ export default class extends Controller {
 
   closeOnOutside(event) {
     if (!this.element.contains(event.target)) this.close()
+  }
+  locate() {
+    if (!navigator.geolocation) return this.locateFailed("Location isn't available in this browser")
+
+    this.inputTarget.value = ""
+    this.valueTarget.value = ""
+    this.inputTarget.placeholder = "Finding your nearest station…"
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => this.lookUpNearest(position.coords),
+      () => this.locateFailed("Couldn't get your location"),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+    )
+  }
+
+  async lookUpNearest({ latitude, longitude }) {
+    const response = await fetch(`${this.nearestUrlValue}?lat=${latitude}&lon=${longitude}`, {
+      headers: { Accept: "application/json" }
+    })
+    if (!response.ok) return this.locateFailed("No station within 3 km of you")
+
+    this.pick(await response.json())
+    this.inputTarget.placeholder = "Station, e.g. Shibuya or 渋谷"
+  }
+
+  locateFailed(message) {
+    this.inputTarget.value = ""
+    this.inputTarget.placeholder = message
+    this.inputTarget.focus()
   }
 }
