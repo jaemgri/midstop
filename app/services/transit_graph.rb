@@ -14,11 +14,13 @@ class TransitGraph
 
   def initialize
     @group_of = {}
+    @line_of = {}
     @codes_in_group = Hash.new { |hash, key| hash[key] = [] }
     @coords = {}
 
-    Station.pluck(:code, :group_code, :lat, :lon).each do |code, group, lat, lon|
+    Station.pluck(:code, :group_code, :line_code, :lat, :lon).each do |code, group, line, lat, lon|
       @group_of[code] = group
+      @line_of[code] = line
       @codes_in_group[group] << code
       @coords[code] = [lat, lon]
     end
@@ -51,16 +53,40 @@ class TransitGraph
 
   # The quickest route between two station groups, as a list of [lat, lon] points.
   def path_between(from_group, to_group)
+    route_codes(from_group, to_group).map { |code| @coords[code] }
+  end
+
+  # The quickest route split into legs, one per train ridden:
+  # [{ line_code: 11302, points: [[lat, lon], ...] }, ...]
+  def legs_between(from_group, to_group)
+    legs = []
+
+    route_codes(from_group, to_group).each_cons(2) do |a, b|
+      next if @group_of[a] == @group_of[b] # changing platforms inside a station, not a ride
+
+      line = @line_of[b]
+      if legs.last && legs.last[:line_code] == line && legs.last[:points].last == @coords[a]
+        legs.last[:points] << @coords[b]
+      else
+        legs << { line_code: line, points: [@coords[a], @coords[b]] }
+      end
+    end
+
+    legs
+  end
+
+  private
+
+  # Station codes along the quickest route, or [] if there's no route.
+  def route_codes(from_group, to_group)
     targets = @codes_in_group.fetch(to_group).to_set
     _, previous, reached = dijkstra(@codes_in_group.fetch(from_group), targets: targets)
     return [] unless reached
 
     path = [reached]
     path.unshift(previous[path.first]) while previous.key?(path.first)
-    path.map { |code| @coords[code] }
+    path
   end
-
-  private
 
   # Classic Dijkstra. With targets, it stops as soon as it reaches one of them.
   def dijkstra(sources, targets: nil)

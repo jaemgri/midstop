@@ -20,15 +20,13 @@ export default class extends Controller {
     const bounds = L.latLngBounds([meeting.coords])
 
     people.forEach((person) => {
-      if (person.path.length === 0) return
+      this.drawLegs(person.legs, bounds)
+      this.drawTransfers(person.legs)
 
-      L.polyline(person.path, { color: INK, weight: 3, opacity: 0.5 }).addTo(this.map)
-
-      L.circleMarker(person.path[0], { radius: 6, color: INK, weight: 2, fillColor: "#ffffff", fillOpacity: 1 })
+      L.circleMarker(person.start, { radius: 6, color: INK, weight: 2, fillColor: "#ffffff", fillOpacity: 1 })
         .bindTooltip(person.name, { permanent: true, direction: "top", offset: [0, -6], className: "map-label" })
         .addTo(this.map)
-
-      person.path.forEach((point) => bounds.extend(point))
+      bounds.extend(person.start)
     })
 
     L.circleMarker(meeting.coords, { radius: 10, color: INK, weight: 3, fillColor: TACTILE, fillOpacity: 1 })
@@ -36,6 +34,28 @@ export default class extends Controller {
       .addTo(this.map)
 
     this.map.fitBounds(bounds, { padding: [32, 32] })
+  }
+
+  // Each leg in its line's colour, over a white casing so it stands out from the map
+  drawLegs(legs, bounds) {
+    legs.forEach((leg) => {
+      L.polyline(leg.points, { color: "#ffffff", weight: 9, opacity: 0.9, lineCap: "round", lineJoin: "round" })
+        .addTo(this.map)
+
+      const line = L.polyline(leg.points, { color: leg.color, weight: 5, opacity: 1, lineCap: "round", lineJoin: "round" })
+        .addTo(this.map)
+      if (leg.name) line.bindTooltip(leg.name, { sticky: true, className: "map-label" })
+
+      leg.points.forEach((point) => bounds.extend(point))
+    })
+  }
+
+  // Small white dots where someone changes from one train to another
+  drawTransfers(legs) {
+    legs.slice(1).forEach((leg) => {
+      L.circleMarker(leg.points[0], { radius: 4, color: INK, weight: 2, fillColor: "#ffffff", fillOpacity: 1 })
+        .addTo(this.map)
+    })
   }
 
   disconnect() {

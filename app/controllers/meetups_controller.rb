@@ -36,12 +36,25 @@ class MeetupsController < ApplicationController
     return nil if best.nil?
 
     graph = TransitGraph.instance
+    legs_by_person = @group_codes.map { |code| graph.legs_between(code, best.group_code) }
+
+    line_codes = legs_by_person.flatten.map { |leg| leg[:line_code] }.uniq
+    lines = Line.where(code: line_codes).pluck(:code, :color, :name).to_h { |code, color, name| [code, [color, name]] }
+
     {
       meeting: { name: best.name, romaji: best.romaji, coords: Station.center_of(best.group_code) },
-      people: @group_codes.map do |code|
+      people: @group_codes.zip(legs_by_person).map do |code, legs|
         {
           name: @origins.dig(code, :romaji) || @origins.dig(code, :name),
-          path: graph.path_between(code, best.group_code)
+          start: legs.first&.dig(:points, 0) || Station.center_of(code),
+          legs: legs.map do |leg|
+            color, line_name = lines[leg[:line_code]]
+            {
+              color: color.to_s.match?(Station::HEX_COLOR) ? color : "#1b2533",
+              name: line_name,
+              points: leg[:points]
+            }
+          end
         }
       end
     }
