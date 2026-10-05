@@ -6,7 +6,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
     <title><%= content_for(:title) || "Midstop" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Midstop">
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,15 +29,20 @@
 
   <body>
   <body class="bg-platform text-ink font-sans antialiased min-h-dvh">
-  <header class="max-w-xl mx-auto px-5 pt-6">
-    <%= link_to "midstop", root_path, class: "text-lg font-black tracking-tight" %>
-  </header>
+    <header class="max-w-xl mx-auto px-5 pt-[max(1.5rem,env(safe-area-inset-top))]">
+      <%= link_to "midstop", root_path, class: "text-lg font-black tracking-tight" %>
+    </header>
 
-  <main class="max-w-xl mx-auto px-5 pt-6 pb-16">
-    <% if alert %>
-      <p class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-red-800"><%= alert %></p>
-    <% end %>
-    <%= yield %>
-  </main>
+    <main class="max-w-xl mx-auto px-5 pt-6 pb-32">
+      <% if notice %>
+        <p class="mb-6 rounded-2xl bg-sign border border-rail px-4 py-3"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-red-800"><%= alert %></p>
+      <% end %>
+      <%= yield %>
+    </main>
+
+    <%= render "shared/tab_bar" %>
   </body>
 </html>

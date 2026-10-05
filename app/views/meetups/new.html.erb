@@ -1,10 +1,15 @@
 <h1 class="text-4xl sm:text-5xl font-black leading-tight tracking-tight">Where should we meet?</h1>
 <p class="mt-3 text-lg text-steel">Add the station each person is coming from. midstop finds the stop where nobody's trip is too long.</p>
 
+<% if home_station %>
+  <p class="mt-6 text-sm text-steel">Starting from your home station, <%= home_station[:name] %>. <%= link_to "Change", you_path, class: "font-medium text-ink underline" %></p>
+<% else %>
+  <p class="mt-6 text-sm text-steel"><%= link_to "Set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
+<% end %>
 <%= form_with url: meet_path, method: :get, data: { controller: "people" },
       class: "mt-8 rounded-3xl border border-rail bg-sign p-5" do %>
   <div data-people-target="list" class="space-y-3">
-    <%= render "person_row" %>
+    <%= render "person_row", station: home_station %>
     <%= render "person_row" %>
   </div>
 
