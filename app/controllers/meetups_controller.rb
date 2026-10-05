@@ -23,6 +23,7 @@ class MeetupsController < ApplicationController
 
     @origins = Station.labels_for(@group_codes)
     @results = MidpointFinder.new(@group_codes).call(limit: 5)
+    @badges = Station.badges_for([*@group_codes, @results.first&.group_code].compact.uniq)
     @map_data = build_map_data(@results.first)
     remember_search(@group_codes, @results.first&.group_code) if @results.any?
   rescue KeyError

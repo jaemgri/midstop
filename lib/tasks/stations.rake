@@ -6,6 +6,7 @@ namespace :stations do
     PREFS = [11, 12, 13, 14].freeze # Saitama, Chiba, Tokyo, Kanagawa
     dir = Rails.root.join("db/data/station_database")
     read = ->(file) { CSV.foreach(dir.join(file), headers: true, encoding: "bom|utf-8") }
+    present = ->(value) { value.presence unless value == "NULL" }
 
     all_stations = read.("station.csv").to_h { |row| [row["code"].to_i, row] }
 
@@ -24,13 +25,13 @@ namespace :stations do
       station_code = row["station_code"].to_i
       next unless open_lines.key?(line_code) && tokyo.key?(station_code)
 
-      order[line_code] << [row["index"].to_i, station_code]
+      order[line_code] << [row["index"].to_i, station_code, present.(row["numbering"])]
     end
     order.each_value(&:sort!)
 
     # One Station row per station per line. code is unique per line; group_code is the station itself.
     stations = order.flat_map do |line_code, entries|
-      entries.map do |index, station_code|
+      entries.map do |index, station_code, numbering|
         row = tokyo[station_code]
         name = row["original_name"]
         romaji = KanaRomanizer.romanize_name(name, row["name_kana"], kana_by_name)
@@ -38,6 +39,7 @@ namespace :stations do
         {
           code: line_code * 1000 + index,
           group_code: station_code,
+          numbering: numbering,
           name: name,
           name_kana: row["name_kana"],
           name_romaji: romaji,
@@ -76,7 +78,7 @@ namespace :stations do
 
     lines = order.keys.map do |code|
       row = open_lines[code]
-      { code: code, name: row["name"], color: row["color"] }
+      { code: code, name: row["name"], color: present.(row["color"]), symbol: present.(row["symbol"]) }
     end
 
     ActiveRecord::Base.transaction do

@@ -1,5 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
+const FALLBACK_COLOR = "#5d6876"
+const DEFAULT_PLACEHOLDER = "Station, e.g. Shibuya or 渋谷"
+
 export default class extends Controller {
   static targets = ["input", "value", "list"]
   static values = { url: String, nearestUrl: String }
@@ -7,6 +10,8 @@ export default class extends Controller {
   connect() {
     this.requestId = 0
   }
+
+  // --- Autocomplete ---
 
   search() {
     this.valueTarget.value = "" // typing again clears any previous pick
@@ -35,21 +40,43 @@ export default class extends Controller {
     stations.forEach((station) => {
       const button = document.createElement("button")
       button.type = "button"
-            button.className = "flex w-full items-baseline justify-between gap-3 px-4 py-3 text-left hover:bg-platform"
+      button.className = "flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-platform"
 
       const label = document.createElement("span")
+      label.className = "min-w-0 truncate"
       label.textContent = `${station.name} ${station.romaji ?? ""}`
 
-      const lines = document.createElement("span")
-      lines.className = "text-xs text-steel"
-      lines.textContent = `${station.lines} ${station.lines === 1 ? "line" : "lines"}`
-
-      button.append(label, lines)
+      button.append(label, this.badgesFor(station))
       button.addEventListener("click", () => this.pick(station))
       this.listTarget.append(button)
     })
 
     this.listTarget.hidden = false
+  }
+
+  badgesFor(station) {
+    const badges = document.createElement("span")
+    badges.className = "flex shrink-0 items-center gap-1"
+    const list = station.badges || []
+
+    list.forEach((badge) => {
+      const pill = document.createElement("span")
+      pill.className = "inline-flex h-6 min-w-6 items-center justify-center rounded-full border-2 bg-white px-1 text-[10px] font-bold leading-none text-ink"
+      pill.style.borderColor = badge.color || FALLBACK_COLOR
+      pill.textContent = badge.letters || ""
+      pill.setAttribute("aria-hidden", "true")
+      badges.append(pill)
+    })
+
+    if (station.lines > list.length) {
+      const more = document.createElement("span")
+      more.className = "text-xs text-steel"
+      more.textContent = `+${station.lines - list.length}`
+      more.setAttribute("aria-hidden", "true")
+      badges.append(more)
+    }
+
+    return badges
   }
 
   pick(station) {
@@ -65,9 +92,13 @@ export default class extends Controller {
   closeOnOutside(event) {
     if (!this.element.contains(event.target)) this.close()
   }
+
+  // --- Use my location ---
+
   locate() {
     if (!navigator.geolocation) return this.locateFailed("Location isn't available in this browser")
 
+    this.close()
     this.inputTarget.value = ""
     this.valueTarget.value = ""
     this.inputTarget.placeholder = "Finding your nearest station…"
@@ -86,7 +117,7 @@ export default class extends Controller {
     if (!response.ok) return this.locateFailed("No station within 3 km of you")
 
     this.pick(await response.json())
-    this.inputTarget.placeholder = "Station, e.g. Shibuya or 渋谷"
+    this.inputTarget.placeholder = DEFAULT_PLACEHOLDER
   }
 
   locateFailed(message) {

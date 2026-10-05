@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_04_153436) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_05_072841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_153436) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "symbol"
     t.index ["code"], name: "index_lines_on_code", unique: true
   end
 
@@ -47,6 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_153436) do
     t.datetime "updated_at", null: false
     t.string "name_kana"
     t.string "search_key"
+    t.string "numbering"
     t.index ["code"], name: "index_stations_on_code", unique: true
     t.index ["group_code"], name: "index_stations_on_group_code"
     t.index ["line_code"], name: "index_stations_on_line_code"
