@@ -2,6 +2,9 @@ class MeetupsController < ApplicationController
   MAX_PEOPLE = 8
 
   def new
+    codes = Array(params[:from]).map(&:to_i).select(&:positive?).first(MAX_PEOPLE)
+    labels = Station.labels_for(codes)
+    @prefill = codes.filter_map { |code| labels[code]&.merge(group_code: code) }
   end
 
   def show
@@ -21,6 +24,7 @@ class MeetupsController < ApplicationController
     @origins = Station.labels_for(@group_codes)
     @results = MidpointFinder.new(@group_codes).call(limit: 5)
     @map_data = build_map_data(@results.first)
+    remember_search(@group_codes, @results.first&.group_code) if @results.any?
   rescue KeyError
     redirect_to root_path, alert: "couldn't find one of those stations, try picking it again"
   end

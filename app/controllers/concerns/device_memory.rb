@@ -4,6 +4,7 @@ module DeviceMemory
 
   MAX_SAVED_SPOTS = 20
   MAX_SAVED_GROUPS = 10
+  MAX_RECENTS = 15
 
   included do
     helper_method :home_station, :spot_saved?
@@ -53,6 +54,23 @@ module DeviceMemory
   def write_saved(spots: saved_spot_codes, groups: saved_groups)
     @saved_data = { "spots" => spots.first(MAX_SAVED_SPOTS), "groups" => groups.first(MAX_SAVED_GROUPS) }
     write_cookie(:saved, @saved_data)
+  end
+  # --- Recent searches ---
+  # Stored as [{ "codes" => [...], "best" => group_code, "at" => "2026-10-05T14:00:00+09:00" }]
+
+  def recent_searches
+    Array(cookies.signed[:recents])
+  end
+
+  def remember_search(codes, best_code)
+    same_group = codes.sort
+    others = recent_searches.reject { |entry| Array(entry["codes"]).sort == same_group }
+    entry = { "codes" => codes, "best" => best_code, "at" => Time.current.iso8601 }
+    write_cookie(:recents, [entry, *others].first(MAX_RECENTS))
+  end
+
+  def forget_recents
+    cookies.delete(:recents)
   end
 
   def write_cookie(name, value)

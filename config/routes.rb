@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   get "saved", to: "saved#index", as: :saved
   get "recent", to: "recents#index", as: :recent
+  delete "recent", to: "recents#clear"
   get "you", to: "profiles#show", as: :you
   resource :home_station, only: [:update, :destroy], path: "you/home"
 end

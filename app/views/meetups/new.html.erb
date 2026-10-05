@@ -9,8 +9,13 @@
 <%= form_with url: meet_path, method: :get, data: { controller: "people" },
       class: "mt-8 rounded-3xl border border-rail bg-sign p-5" do %>
   <div data-people-target="list" class="space-y-3">
-    <%= render "person_row", station: home_station %>
-    <%= render "person_row" %>
+    <% rows = @prefill.presence || [home_station].compact %>
+    <% rows.each do |station| %>
+      <%= render "person_row", station: station %>
+    <% end %>
+    <% [2 - rows.size, 0].max.times do %>
+      <%= render "person_row" %>
+    <% end %>
   </div>
 
   <template data-people-target="template">
