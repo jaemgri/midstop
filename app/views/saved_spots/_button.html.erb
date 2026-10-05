@@ -1,0 +1,10 @@
+<% saved = spot_saved?(code) %>
+<%= button_to (saved ? saved_spot_path(code) : saved_spots_path),
+      method: (saved ? :delete : :post),
+      params: (saved ? {} : { group_code: code }),
+      form: { id: "save_spot_#{code}", class: "inline-block" },
+      "aria-pressed": saved,
+      class: "inline-flex items-center gap-2 rounded-full border border-rail bg-sign px-4 py-2 font-medium hover:border-ink cursor-pointer" do %>
+  <%= star_icon(filled: saved) %>
+  <span><%= saved ? "Saved" : "Save spot" %></span>
+<% end %>

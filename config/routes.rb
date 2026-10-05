@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   get "meet", to: "meetups#show", as: :meet
   resources :stations, only: :index
   get "places/:group_code", to: "places#show", as: :places
+  resources :saved_spots, only: [:create, :destroy], param: :group_code
+  resources :saved_groups, only: [:create, :destroy]
+  get "spots/:group_code", to: "spots#show", as: :spot
 
   get "saved", to: "saved#index", as: :saved
   get "recent", to: "recents#index", as: :recent

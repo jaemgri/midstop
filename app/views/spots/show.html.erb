@@ -1,0 +1,19 @@
+<%= link_to "Saved", saved_path, class: "text-sm font-medium text-steel hover:text-ink" %>
+
+<div class="mt-4">
+  <%= render "shared/station_sign", name: @label[:name], romaji: @label[:romaji] %>
+</div>
+
+<div class="mt-4">
+  <%= render "saved_spots/button", code: @group_code %>
+</div>
+
+<section class="mt-8">
+  <h2 class="font-bold">Around <%= @label[:romaji] || @label[:name] %></h2>
+  <%= turbo_frame_tag "nearby", src: places_path(@group_code), loading: :lazy do %>
+    <p class="mt-3 text-steel">Looking for places near <%= @label[:name] %>…</p>
+  <% end %>
+  <p class="mt-4 text-xs text-steel">
+    Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
+  </p>
+</section>

@@ -1,6 +1,57 @@
 <h1 class="text-4xl font-black tracking-tight">Saved</h1>
-<div class="mt-6 rounded-3xl border border-rail bg-sign p-6">
-  <p class="font-bold">Nothing saved yet</p>
-  <p class="mt-1 text-steel">Star a meeting spot or save your group from any result, and it'll be here next time.</p>
-  <%= link_to "Plan a meetup", root_path, class: "mt-4 inline-block rounded-full bg-ink px-5 py-3 font-bold text-white hover:bg-steel" %>
-</div>
+
+<% if @spots.empty? && @groups.empty? %>
+  <div class="mt-6 rounded-3xl border border-rail bg-sign p-6">
+    <p class="font-bold">Nothing saved yet</p>
+    <p class="mt-1 text-steel">Star a meeting spot or save your group from any result, and it'll be here next time.</p>
+    <%= link_to "Plan a meetup", root_path, class: "mt-4 inline-block rounded-full bg-ink px-5 py-3 font-bold text-white hover:bg-steel" %>
+  </div>
+<% else %>
+  <section class="mt-6">
+    <h2 class="font-bold">Groups</h2>
+    <% if @groups.any? %>
+      <ul class="mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+        <% @groups.each do |group| %>
+          <li id="saved_group_<%= group["id"] %>" class="px-5 py-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="font-bold"><%= group["name"] %></p>
+                <p class="text-sm text-steel">
+                  <%= group["codes"].filter_map { |code| @labels.dig(code, :romaji) || @labels.dig(code, :name) }.to_sentence %>
+                </p>
+              </div>
+              <%= button_to "Remove", saved_group_path(group["id"]), method: :delete,
+                    "aria-label": "Remove #{group['name']}",
+                    class: "shrink-0 text-sm text-steel hover:text-ink cursor-pointer" %>
+            </div>
+            <%= link_to "Find our spot", meet_path(from: group["codes"]),
+                  class: "mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-bold text-white hover:bg-steel" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-steel">Save the group from any result to re-run it in one tap.</p>
+    <% end %>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="font-bold">Spots</h2>
+    <% if @spots.any? %>
+      <ul class="mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+        <% @spots.each do |code| %>
+          <% label = @labels[code] %>
+          <% next unless label %>
+          <li id="saved_spot_row_<%= code %>" class="flex items-center justify-between gap-3 px-5 py-3">
+            <%= link_to spot_path(code), class: "min-w-0 flex-1" do %>
+              <span class="font-bold" lang="ja"><%= label[:name] %></span>
+              <span class="text-steel"><%= label[:romaji] %></span>
+            <% end %>
+            <%= render "saved_spots/button", code: code %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-steel">Star a meeting spot from any result to keep it here.</p>
+    <% end %>
+  </section>
+<% end %>

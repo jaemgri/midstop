@@ -1,7 +1,7 @@
 module TabsHelper
   TABS = [
     { label: "Meet", path: :root_path, controllers: %w[meetups places], icon: :pin },
-    { label: "Saved", path: :saved_path, controllers: %w[saved], icon: :star },
+    { label: "Saved", path: :saved_path, controllers: %w[saved spots], icon: :star },
     { label: "Recent", path: :recent_path, controllers: %w[recents], icon: :clock },
     { label: "You", path: :you_path, controllers: %w[profiles], icon: :person }
   ].freeze
@@ -23,5 +23,11 @@ module TabsHelper
     tag.svg(ICONS.fetch(name).html_safe, viewBox: "0 0 24 24", class: "h-6 w-6", fill: "none",
             stroke: "currentColor", "stroke-width": 1.8, "stroke-linecap": "round", "stroke-linejoin": "round",
             "aria-hidden": true)
+  end
+
+  def star_icon(filled: false)
+    tag.svg(ICONS[:star].html_safe, viewBox: "0 0 24 24",
+            class: "h-5 w-5 #{filled ? 'fill-tactile' : 'fill-none'}",
+            stroke: "currentColor", "stroke-width": 1.8, "stroke-linejoin": "round", "aria-hidden": true)
   end
 end
