@@ -7,7 +7,7 @@ module BadgesHelper
     label = [[badge.letters, badge.number].compact.join(" "), badge.line_name].compact_blank.join(", ")
 
     if size == :md
-      tag.span(class: "inline-flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-full border-[3px] bg-white leading-none text-ink",
+      tag.span(class: "inline-flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-full border-[3px] bg-sign leading-none text-ink",
                style: "border-color: #{color}", role: "img", "aria-label": label, title: label) do
         safe_join([
           tag.span(badge.letters, class: "text-[10px] font-bold"),
@@ -16,7 +16,7 @@ module BadgesHelper
       end
     else
       tag.span(badge.letters,
-               class: "inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full border-2 bg-white px-1 text-[10px] font-bold leading-none text-ink",
+               class: "inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full border-2 bg-sign px-1 text-[10px] font-bold leading-none text-ink",
                style: "border-color: #{color}", role: "img", "aria-label": label, title: label)
     end
   end

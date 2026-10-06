@@ -11,15 +11,15 @@
   <svg viewBox="0 0 360 220" class="block h-auto w-full">
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
       <% lines.each do |line| %>
-        <path d="<%= line[:d] %>" stroke="#ffffff" stroke-width="26" />
+        <path d="<%= line[:d] %>" class="stroke-sign" stroke-width="26" />
         <path d="<%= line[:d] %>" stroke="<%= line[:color] %>" stroke-width="16" />
       <% end %>
     </g>
     <% lines.each do |line| %>
-      <circle cx="<%= line[:start][0] %>" cy="<%= line[:start][1] %>" r="16" fill="#ffffff"
+      <circle cx="<%= line[:start][0] %>" cy="<%= line[:start][1] %>" r="16" class="fill-sign"
               stroke="<%= line[:color] %>" stroke-width="7" />
     <% end %>
-    <circle cx="200" cy="110" r="38" fill="#f4c300" opacity="0.35" class="hero-pulse" />
-    <circle cx="200" cy="110" r="24" fill="#f4c300" stroke="#1b2533" stroke-width="6" />
+    <circle cx="200" cy="110" r="38" class="hero-pulse fill-tactile" opacity="0.35" />
+    <circle cx="200" cy="110" r="24" class="fill-tactile stroke-on-tactile" stroke-width="6" />
   </svg>
 </div>

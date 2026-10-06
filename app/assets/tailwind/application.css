@@ -9,9 +9,24 @@
   --color-steel: #5d6876;
   --color-rail: #d6dbe1;
   --color-tactile: #f4c300;
+  --color-on-tactile: #1b2533;
 }
 
 @layer base {
+    :root {
+    color-scheme: light dark;
+  }
+
+  /* Night platform: the same tokens, redefined for dark mode */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-platform: #0e131b;
+      --color-sign: #18202b;
+      --color-ink: #eef0f2;
+      --color-steel: #9aa4b2;
+      --color-rail: #2a3442;
+    }
+  }
   :focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: 2px;
@@ -114,6 +129,50 @@
     transform-box: fill-box;
     transform-origin: center;
     animation: pulse-ring 2.4s ease-in-out infinite;
+  }
+    .btn-pop {
+    background: var(--color-tactile);
+    color: var(--color-on-tactile);
+    border: 2.5px solid var(--color-ink);
+    box-shadow: 4px 4px 0 0 var(--color-ink);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+
+  .btn-pop-light {
+    background: var(--color-sign);
+    color: var(--color-ink);
+  }
+
+  .highlight {
+    background: linear-gradient(transparent 55%, var(--color-tactile) 55%, var(--color-tactile) 92%, transparent 92%);
+    color: var(--color-on-tactile);
+    padding: 0 0.08em;
+    box-decoration-break: clone;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    /* Night map: greyscale, inverted, softened */
+    .leaflet-tile-pane {
+      filter: grayscale(1) invert(1) brightness(0.85) contrast(0.85);
+    }
+    .leaflet-container .leaflet-control-attribution {
+      background: color-mix(in srgb, var(--color-sign) 85%, transparent);
+      color: var(--color-steel);
+    }
+    .leaflet-container .leaflet-control-attribution a {
+      color: var(--color-ink);
+    }
+        /* In dark mode the highlight becomes a full yellow label, so the whole word stays readable */
+    /* In dark mode the highlight becomes a tilted yellow label, so the whole word stays readable */
+    .highlight {
+      display: inline-block;
+      background: var(--color-tactile);
+      border-radius: 0.15em;
+      padding: 0.02em 0.18em 0.1em;
+      margin-top: 0.12em;
+      line-height: 1;
+      transform: rotate(-1.5deg);
+    }
   }
 }
 

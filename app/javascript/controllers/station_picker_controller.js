@@ -61,7 +61,7 @@ export default class extends Controller {
 
     list.forEach((badge) => {
       const pill = document.createElement("span")
-      pill.className = "inline-flex h-6 min-w-6 items-center justify-center rounded-full border-2 bg-white px-1 text-[10px] font-bold leading-none text-ink"
+      pill.className = "inline-flex h-6 min-w-6 items-center justify-center rounded-full border-2 bg-sign px-1 text-[10px] font-bold leading-none text-ink"
       pill.style.borderColor = badge.color || FALLBACK_COLOR
       pill.textContent = badge.letters || ""
       pill.setAttribute("aria-hidden", "true")

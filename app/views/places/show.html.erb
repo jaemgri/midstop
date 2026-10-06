@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "nearby" do %>
   <% chip = "press inline-block whitespace-nowrap rounded-full border-2 px-4 py-2 text-sm font-bold transition-colors" %>
-  <% on = "#{chip} border-ink bg-ink text-white" %>
+  <% on = "#{chip} border-ink bg-ink text-sign" %>
   <% off = "#{chip} border-rail bg-sign hover:border-ink" %>
   <% showing_all = @filter.nil? && @query.blank? %>
 

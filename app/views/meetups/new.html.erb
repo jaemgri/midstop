@@ -9,7 +9,7 @@
 </section>
 
 <% if home_station %>
-  <p class="mt-6 text-sm text-steel">starting from your home station, <%= home_station[:name] %>. <%= link_to "Change", you_path, class: "font-medium text-ink underline" %></p>
+  <p class="mt-6 text-sm text-steel">starting from your home station, <%= home_station[:name] %>. <%= link_to "change", you_path, class: "font-medium text-ink underline" %></p>
 <% else %>
   <p class="mt-6 text-sm text-steel"><%= link_to "set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
 <% end %>
@@ -31,7 +31,7 @@
   </template>
 
   <button type="button" data-action="people#add"
-          class="mt-4 font-medium text-steel hover:text-ink">+ Add a person</button>
+          class="mt-4 font-medium text-steel hover:text-ink">+ add a person</button>
 
   <%= submit_tag "find our spot", name: nil,
         class: "btn-pop mt-6 w-full rounded-full py-4 text-lg font-black cursor-pointer" %>

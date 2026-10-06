@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <meta name="theme-color" content="#eef0f2">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e131b" media="(prefers-color-scheme: dark)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -38,7 +39,7 @@
         <p class="animate-arrive mb-6 rounded-2xl bg-sign border border-rail px-4 py-3"><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-red-800"><%= alert %></p>
+        <p class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-red-800 dark:bg-red-950 dark:text-red-200"><%= alert %></p>
       <% end %>
       <%= yield %>
     </main>
