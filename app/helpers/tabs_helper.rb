@@ -1,9 +1,9 @@
 module TabsHelper
   TABS = [
-    { label: "Meet", path: :root_path, controllers: %w[meetups places], icon: :pin },
-    { label: "Saved", path: :saved_path, controllers: %w[saved spots], icon: :star },
-    { label: "Recent", path: :recent_path, controllers: %w[recents], icon: :clock },
-    { label: "You", path: :you_path, controllers: %w[profiles], icon: :person }
+    { label: "meet", path: :root_path, controllers: %w[meetups places], icon: :pin },
+    { label: "saved", path: :saved_path, controllers: %w[saved spots], icon: :star },
+    { label: "recent", path: :recent_path, controllers: %w[recents], icon: :clock },
+    { label: "you", path: :you_path, controllers: %w[profiles], icon: :person }
   ].freeze
 
   ICONS = {

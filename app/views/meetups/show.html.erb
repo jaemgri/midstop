@@ -5,45 +5,48 @@
 <% names = @group_codes.map { |code| @origins.dig(code, :name) }.compact %>
 <% best, *others = @results %>
 
-<%= link_to "Change stations", root_path, class: "text-sm font-medium text-steel hover:text-ink" %>
+<%= link_to "← change stations", root_path(from: @group_codes), class: "press inline-block text-sm font-bold text-steel hover:text-ink" %>
 
 <% if best.nil? %>
-  <p class="mt-6 text-lg">There's no station everyone can reach by train. Try a different set of stations.</p>
+  <p class="mt-6 text-lg">no station everyone can reach by train 😵 try a different mix.</p>
 <% else %>
-  <p class="mt-6 text-steel">Fairest stop for <%= names.to_sentence %></p>
+  <h1 class="mt-5 text-3xl font-black leading-tight tracking-tight">
+    the fairest spot for <span class="highlight"><%= names.size %> of you</span>
+  </h1>
+  <p class="mt-1 text-steel"><%= names.to_sentence %></p>
 
-  <div class="mt-3">
+  <div class="mt-5">
     <%= render "shared/station_sign", name: best.name, romaji: best.romaji, longest: best.longest,
           badges: @badges[best.group_code], aria_label: "Fairest station" %>
   </div>
 
   <div data-controller="route-map"
        data-route-map-data-value="<%= @map_data.to_json %>"
-       class="isolate mt-4 h-72 overflow-hidden rounded-3xl border border-rail bg-sign"
+       class="animate-arrive isolate mt-5 h-72 overflow-hidden rounded-3xl border-2 border-ink bg-sign [animation-delay:120ms]"
        role="img"
        aria-label="Map of everyone's route to <%= best.romaji || best.name %>"></div>
 
-  <div class="mt-4 flex flex-wrap items-center gap-2">
+  <div class="mt-5 flex flex-wrap items-center gap-3">
     <div data-controller="share"
          data-share-url-value="<%= meet_url(from: @group_codes) %>"
          data-share-title-value="Meet at <%= best.romaji || best.name %>"
-         data-share-text-value="Fairest spot for us: <%= best.name %> (<%= best.romaji %>). Longest trip <%= best.longest %> min."
+         data-share-text-value="fairest spot for us: <%= best.name %> (<%= best.romaji %>). longest trip <%= best.longest %> min."
          class="contents">
       <button type="button" hidden data-share-target="share" data-action="share#share"
-              class="rounded-full bg-ink px-5 py-2 font-bold text-white hover:bg-steel cursor-pointer">Share</button>
+              class="btn-pop rounded-full px-5 py-2 font-black cursor-pointer">share 📤</button>
       <button type="button" data-share-target="copy" data-action="share#copy"
-              class="rounded-full bg-ink px-5 py-2 font-bold text-white hover:bg-steel cursor-pointer">Copy link</button>
+              class="btn-pop rounded-full px-5 py-2 font-black cursor-pointer">copy link</button>
     </div>
     <%= render "saved_spots/button", code: best.group_code %>
   </div>
 
-  <div class="mt-3">
+  <div class="mt-4">
     <%= render "saved_groups/form", codes: @group_codes %>
   </div>
 
-  <section class="mt-8">
-    <h2 class="font-bold">Everyone's trip</h2>
-    <ul class="mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+  <section class="mt-10">
+    <h2 class="text-xl font-black">everyone's trip</h2>
+    <ul class="stagger mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
       <% @group_codes.each_with_index do |code, person| %>
         <li class="flex items-center justify-between gap-4 px-5 py-3">
           <span class="flex min-w-0 items-center gap-2">
@@ -53,18 +56,18 @@
               <span class="text-steel"><%= @origins.dig(code, :romaji) %></span>
             </span>
           </span>
-          <span class="shrink-0 font-bold tabular-nums">
-            <%= best.minutes[person].zero? ? "Already there" : "#{best.minutes[person]} min" %>
+          <span class="shrink-0 font-black tabular-nums">
+            <%= best.minutes[person].zero? ? "already there 🏠" : "#{best.minutes[person]} min" %>
           </span>
         </li>
       <% end %>
     </ul>
   </section>
 
-  <section class="mt-8">
-    <h2 class="font-bold">Around <%= best.romaji || best.name %></h2>
+  <section class="mt-10">
+    <h2 class="text-xl font-black">around <%= best.romaji || best.name %></h2>
     <%= turbo_frame_tag "nearby", src: places_path(best.group_code), loading: :lazy do %>
-      <p class="mt-3 text-steel">Looking for places near <%= best.name %>…</p>
+      <p class="mt-3 text-steel">finding food and drinks near <%= best.name %>…</p>
     <% end %>
     <p class="mt-4 text-xs text-steel">
       Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
@@ -72,18 +75,18 @@
   </section>
 
   <% if others.any? %>
-    <section class="mt-8">
-      <h2 class="font-bold">Close runners-up</h2>
-      <div class="mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+    <section class="mt-10">
+      <h2 class="text-xl font-black">also pretty fair</h2>
+      <div class="stagger mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
         <% others.each do |result| %>
           <details class="group px-5 py-3">
-            <summary class="flex cursor-pointer list-none items-baseline justify-between gap-4">
+            <summary class="press flex cursor-pointer list-none items-baseline justify-between gap-4">
               <span>
                 <span class="font-bold" lang="ja"><%= result.name %></span>
                 <span class="text-steel"><%= result.romaji %></span>
               </span>
               <span class="shrink-0 text-steel tabular-nums">
-                longest <span class="font-bold text-ink"><%= result.longest %> min</span>
+                longest <span class="font-black text-ink"><%= result.longest %> min</span>
                 <span class="ml-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">›</span>
               </span>
             </summary>

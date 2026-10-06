@@ -1,18 +1,19 @@
-<section class="overflow-hidden rounded-3xl border border-rail bg-sign shadow-sm" aria-label="<%= local_assigns[:aria_label] || "Station" %>">
+<section class="animate-arrive overflow-hidden rounded-3xl border-2 border-ink bg-sign shadow-[5px_5px_0_0_var(--color-ink)]"
+         aria-label="<%= local_assigns[:aria_label] || "Station" %>">
   <div class="px-6 pt-9 pb-7 text-center">
     <p class="text-6xl font-black tracking-[0.2em]" lang="ja"><%= name %></p>
-    <p class="mt-3 text-xl font-medium tracking-wide text-steel"><%= romaji %></p>
+    <p class="mt-3 text-xl font-bold tracking-wide text-steel"><%= romaji %></p>
     <% if local_assigns[:badges].present? %>
       <div class="mt-5 flex flex-wrap justify-center gap-2">
         <%= line_badges(badges) %>
       </div>
     <% end %>
   </div>
-  <div class="tactile h-4" aria-hidden="true"></div>
+  <div class="tactile h-4 border-y-2 border-ink" aria-hidden="true"></div>
   <% if local_assigns[:longest] %>
     <div class="flex items-baseline justify-between px-6 py-4">
-      <span class="text-steel">Longest trip</span>
-      <span class="text-2xl font-bold tabular-nums"><%= longest %> min</span>
+      <span class="font-medium text-steel">longest trip</span>
+      <span class="text-2xl font-black tabular-nums"><%= longest %> min</span>
     </div>
   <% end %>
 </section>

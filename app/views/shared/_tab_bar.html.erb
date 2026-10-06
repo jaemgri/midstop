@@ -4,7 +4,7 @@
       <li>
         <%= link_to tab[:href],
               "aria-current": (tab[:active] ? "page" : nil),
-              class: "flex min-h-14 flex-col items-center justify-center gap-1 pt-1 pb-2 text-xs font-medium #{tab[:active] ? 'text-ink' : 'text-steel hover:text-ink'}" do %>
+              class: "press flex min-h-14 flex-col items-center justify-center gap-1 pt-1 pb-2 text-xs font-medium #{tab[:active] ? 'text-ink' : 'text-steel hover:text-ink'}" do %>
           <span class="h-1 w-6 rounded-full <%= tab[:active] ? 'bg-tactile' : 'bg-transparent' %>" aria-hidden="true"></span>
           <%= tab_icon(tab[:icon]) %>
           <span><%= tab[:label] %></span>

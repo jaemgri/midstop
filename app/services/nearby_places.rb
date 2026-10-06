@@ -9,14 +9,14 @@ class NearbyPlaces
   METERS_PER_MINUTE = 80 # the standard walking pace in Japanese property listings
   PER_CATEGORY = 5
   MAX_FILTERED = 15
-  CATEGORY_ORDER = ["Food", "Cafés", "Drinks", "Karaoke"].freeze
+  CATEGORY_ORDER = ["food", "cafés", "drinks", "karaoke"].freeze
 
   FILTERS = {
-    "izakaya" => { label: "Izakaya", match: ->(item) { item["cuisine"].to_s.include?("izakaya") || item["name"].include?("居酒屋") } },
-    "bars" => { label: "Bars", match: ->(item) { %w[bar pub].include?(item["amenity"]) } },
-    "ramen" => { label: "Ramen", match: ->(item) { item["cuisine"].to_s.match?(/ramen|noodle/) || item["name"].match?(/ラーメン|らーめん|拉麺/) } },
-    "cafes" => { label: "Cafés", match: ->(item) { item["amenity"] == "cafe" } },
-    "karaoke" => { label: "Karaoke", match: ->(item) { item["amenity"] == "karaoke_box" || item["name"].match?(/カラオケ|karaoke/i) } }
+    "izakaya" => { label: "izakaya", match: ->(item) { item["cuisine"].to_s.include?("izakaya") || item["name"].include?("居酒屋") } },
+    "bars" => { label: "bars", match: ->(item) { %w[bar pub].include?(item["amenity"]) } },
+    "ramen" => { label: "ramen", match: ->(item) { item["cuisine"].to_s.match?(/ramen|noodle/) || item["name"].match?(/ラーメン|らーめん|拉麺/) } },
+    "cafes" => { label: "cafés", match: ->(item) { item["amenity"] == "cafe" } },
+    "karaoke" => { label: "karaoke", match: ->(item) { item["amenity"] == "karaoke_box" || item["name"].match?(/カラオケ|karaoke/i) } }
   }.freeze
 
   Place = Data.define(:name, :name_en, :category, :walk_minutes)
@@ -45,7 +45,7 @@ class NearbyPlaces
     places = items.map { |item| build_place(item) }.sort_by(&:walk_minutes)
 
     if filter || keyword.present?
-      heading = FILTERS.dig(filter, :label) || "Results"
+      heading = FILTERS.dig(filter, :label) || "results"
       return places.empty? ? {} : { heading => places.first(MAX_FILTERED) }
     end
 
@@ -101,10 +101,10 @@ class NearbyPlaces
 
   def category_for(tags)
     case tags["amenity"]
-    when "cafe" then "Cafés"
-    when "karaoke_box" then "Karaoke"
-    when "bar", "pub" then "Drinks"
-    else tags["cuisine"].to_s.include?("izakaya") ? "Drinks" : "Food"
+    when "cafe" then "cafés"
+    when "karaoke_box" then "karaoke"
+    when "bar", "pub" then "drinks"
+    else tags["cuisine"].to_s.include?("izakaya") ? "drinks" : "food"
     end
   end
 

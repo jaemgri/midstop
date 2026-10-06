@@ -1,17 +1,17 @@
 <div id="save_group">
   <details class="group">
-    <summary class="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border border-rail bg-sign px-4 py-2 font-medium hover:border-ink">
-      Save this group
+    <summary class="btn-pop btn-pop-light inline-flex cursor-pointer list-none items-center gap-2 rounded-full px-4 py-2 font-bold">
+      save this crew
     </summary>
-    <%= form_with url: saved_groups_path, class: "mt-3 flex gap-2" do %>
+    <%= form_with url: saved_groups_path, class: "mt-4 flex gap-2" do %>
       <% codes.each do |code| %>
         <%= hidden_field_tag "codes[]", code, id: nil %>
       <% end %>
-      <%= text_field_tag :name, nil, placeholder: "Name it, e.g. Uni crew", maxlength: 30, required: true,
-            "aria-label": "Group name",
-            class: "flex-1 min-w-0 rounded-full border border-rail bg-platform px-4 py-2 text-base placeholder:text-steel" %>
-      <%= submit_tag "Save", name: nil,
-            class: "rounded-full bg-ink px-5 font-bold text-white hover:bg-steel cursor-pointer" %>
+      <%= text_field_tag :name, nil, placeholder: "name it, e.g. uni crew", maxlength: 30, required: true,
+            "aria-label": "Crew name",
+            class: "flex-1 min-w-0 rounded-full border-2 border-ink bg-sign px-4 py-2 text-base placeholder:text-steel" %>
+      <%= submit_tag "save", name: nil,
+            class: "btn-pop rounded-full px-5 font-black cursor-pointer" %>
     <% end %>
   </details>
 </div>

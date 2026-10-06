@@ -4,7 +4,7 @@
       params: (saved ? {} : { group_code: code }),
       form: { id: "save_spot_#{code}", class: "inline-block" },
       "aria-pressed": saved,
-      class: "inline-flex items-center gap-2 rounded-full border border-rail bg-sign px-4 py-2 font-medium hover:border-ink cursor-pointer" do %>
+      class: "btn-pop #{'btn-pop-light' unless saved} inline-flex items-center gap-2 rounded-full px-4 py-2 font-bold cursor-pointer" do %>
   <%= star_icon(filled: saved) %>
-  <span><%= saved ? "Saved" : "Save spot" %></span>
+  <span><%= saved ? "saved" : "save spot" %></span>
 <% end %>
