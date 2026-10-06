@@ -9,9 +9,9 @@
 </section>
 
 <% if home_station %>
-  <p class="mt-6 text-sm text-steel">Starting from your home station, <%= home_station[:name] %>. <%= link_to "Change", you_path, class: "font-medium text-ink underline" %></p>
+  <p class="mt-6 text-sm text-steel">starting from your home station, <%= home_station[:name] %>. <%= link_to "Change", you_path, class: "font-medium text-ink underline" %></p>
 <% else %>
-  <p class="mt-6 text-sm text-steel"><%= link_to "Set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
+  <p class="mt-6 text-sm text-steel"><%= link_to "set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
 <% end %>
 
 <%= form_with url: meet_path, method: :get, data: { controller: "people" },

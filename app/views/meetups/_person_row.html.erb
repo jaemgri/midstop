@@ -8,7 +8,7 @@
      class="relative flex gap-2">
   <input type="text" autocomplete="off" name="names[]"
          value="<%= [station&.dig(:name), station&.dig(:romaji)].compact.join(' ') %>"
-         placeholder="Station, e.g. Shibuya or 渋谷"
+         placeholder="station, e.g. shibuya or 渋谷"
          aria-label="<%= station ? 'Your station' : 'Station' %>"
          data-station-picker-target="input"
          data-action="input->station-picker#search keydown.esc->station-picker#close"

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 const FALLBACK_COLOR = "#5d6876"
-const DEFAULT_PLACEHOLDER = "Station, e.g. Shibuya or 渋谷"
+const DEFAULT_PLACEHOLDER = "station, e.g. shibuya or 渋谷"
 
 export default class extends Controller {
   static targets = ["input", "value", "list"]
@@ -96,16 +96,16 @@ export default class extends Controller {
   // --- Use my location ---
 
   locate() {
-    if (!navigator.geolocation) return this.locateFailed("Location isn't available in this browser")
+    if (!navigator.geolocation) return this.locateFailed("location isn't available in this browser")
 
     this.close()
     this.inputTarget.value = ""
     this.valueTarget.value = ""
-    this.inputTarget.placeholder = "Finding your nearest station…"
+    this.inputTarget.placeholder = "finding your nearest station…"
 
     navigator.geolocation.getCurrentPosition(
       (position) => this.lookUpNearest(position.coords),
-      () => this.locateFailed("Couldn't get your location"),
+      () => this.locateFailed("couldn't get your location"),
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
     )
   }
@@ -114,7 +114,7 @@ export default class extends Controller {
     const response = await fetch(`${this.nearestUrlValue}?lat=${latitude}&lon=${longitude}`, {
       headers: { Accept: "application/json" }
     })
-    if (!response.ok) return this.locateFailed("No station within 3 km of you")
+    if (!response.ok) return this.locateFailed("no station within 3 km of you")
 
     this.pick(await response.json())
     this.inputTarget.placeholder = DEFAULT_PLACEHOLDER

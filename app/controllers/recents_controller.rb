@@ -7,6 +7,6 @@ class RecentsController < ApplicationController
 
   def clear
     forget_recents
-    redirect_to recent_path, notice: "Recent searches cleared"
+    redirect_to recent_path, notice: "recent searches cleared"
   end
 end

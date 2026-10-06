@@ -5,8 +5,8 @@ module RecentsHelper
     return "" if time.nil?
 
     case time.to_date
-    when Date.current then "Today"
-    when Date.yesterday then "Yesterday"
+    when Date.current then "today"
+    when Date.yesterday then "yesterday"
     else time.strftime("%-d %b")
     end
   end
