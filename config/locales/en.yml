@@ -63,6 +63,7 @@ en:
       copy: copy link
       copied: link copied
       copy_failed: couldn't copy
+      heading_fast_html: "the quickest spot overall for %{people}"
       everyones_trip: everyone's trip
       already_there: already there 🏠
       minutes: "%{count} min"
@@ -92,6 +93,7 @@ en:
         bars: bars
         ramen: ramen
         results: results
+        for_you: for you ✨
       search_placeholder: search, e.g. sushi, 焼き鳥, burger
       search_label: "Search places near %{station}"
       go: go
@@ -152,11 +154,26 @@ en:
       home_hint: filled in as your station every time you plan a meetup.
       save: save
       clear: clear home station
+      vibe_title: your vibe
+      vibe_hint: what's your crew usually up for? we'll show it first.
+      walk_title: max walk from the station
+      walk_any: any
+      walk_minutes: "within %{count} min"
+      ranking_title: "pick the spot that's…"
+      ranking_fair: fairest
+      ranking_fair_hint: nobody's trip is way longer than everyone else's
+      ranking_fast: quickest overall
+      ranking_fast_hint: the least total time everyone spends on the train
+      save_prefs: save my vibe
       language: language
       language_hint: midstop speaks english and 日本語.
       about: about midstop
       about_text: finds the station where nobody in the crew has a way longer trip than everyone else. travel times are estimates based on distance and transfers.
       credits_html: "station data from %{station_database} (CC BY 4.0). map and places © %{osm}."
+
+  preferences:
+    update:
+      saved: saved ✌️
 
   home_stations:
     update:

@@ -19,6 +19,10 @@ ja:
     recent: 履歴
     you: マイページ
 
+  preferences:
+    update:
+      saved: 保存したよ ✌️
+
   station_picker:
     finding: 最寄り駅を探し中…
     no_location: このブラウザでは位置情報が使えないよ
@@ -73,6 +77,7 @@ ja:
       no_trip: 移動なし
       too_few: 見つかる駅を2つ以上入れてね
       not_found: 駅が見つからなかった。もう一度選んでみて。
+      heading_fast_html: "%{people}の合計移動がいちばん短い駅"
 
   places:
     show:
@@ -92,6 +97,7 @@ ja:
         bars: バー
         ramen: ラーメン
         results: 検索結果
+        for_you: あなた向け ✨
       search_placeholder: 検索（例：寿司・焼き鳥・burger）
       search_label: "%{station}周辺のお店を検索"
       go: 検索
@@ -152,12 +158,22 @@ ja:
       home_hint: 集合場所を探すとき、自動で入力されるよ。
       save: 保存
       clear: 最寄り駅を消す
+      vibe_title: いつもの気分
+      vibe_hint: いつメンでよく行くのは？近くのお店で先に表示するよ。
+      walk_title: 駅からの徒歩
+      walk_any: 指定なし
+      walk_minutes: "%{count}分以内"
+      ranking_title: 集合場所の選び方
+      ranking_fair: いちばん公平
+      ranking_fair_hint: 誰かだけ移動が長すぎる、をなくす
+      ranking_fast: 合計がいちばん短い
+      ranking_fast_hint: みんなの移動時間の合計を最小にする
+      save_prefs: 保存
       language: 言語
       language_hint: 英語と日本語に対応してるよ。
       about: midstopについて
       about_text: 誰かだけ移動が長すぎる、がない駅を見つけるアプリ。移動時間は距離と乗り換えからの目安だよ。
       credits_html: "駅データ：%{station_database}（CC BY 4.0）。地図とお店：© %{osm}"
-
   home_stations:
     update:
       saved: 最寄り駅を保存したよ ✌️

@@ -12,7 +12,7 @@
   <% best_label = { name: best.name, romaji: best.romaji } %>
 
   <h1 class="mt-5 text-3xl font-black leading-tight tracking-tight">
-    <%= t(".heading_html", people: tag.span(t(".people", count: @group_codes.size), class: "highlight")) %>
+    <%= t(preferences[:ranking] == "fast" ? ".heading_fast_html" : ".heading_html", people: tag.span(t(".people", count: @group_codes.size), class: "highlight")) %>
   </h1>
   <p class="mt-1 text-steel"><%= station_list(@origins, @group_codes) %></p>
 

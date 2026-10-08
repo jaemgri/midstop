@@ -4,7 +4,10 @@ require "net/http"
 # Everything nearby is fetched once and cached; chips and keyword searches filter that list.
 # Returns plain IDs ("food", "cafes"…); views translate them.
 class NearbyPlaces
-  ENDPOINT = URI("https://overpass-api.de/api/interpreter")
+  ENDPOINTS = [
+    URI("https://overpass-api.de/api/interpreter"),
+    URI("https://overpass.private.coffee/api/interpreter")
+  ].freeze
   USER_AGENT = "midstop/1.0 (https://github.com/jaemgri/midstop)"
   RADIUS_METERS = 600
   METERS_PER_MINUTE = 80 # the standard walking pace in Japanese property listings
@@ -12,8 +15,15 @@ class NearbyPlaces
   MAX_FILTERED = 15
   CATEGORY_ORDER = %w[food cafes drinks karaoke].freeze
 
+  # Izakaya are tagged inconsistently in OpenStreetMap, so also match on common words and chain names
+  IZAKAYA_NAMES = /居酒屋|酒場|炉端|ろばた|焼鳥|焼き鳥|やきとり|串カツ|串揚|立ち飲み|立飲み|鳥貴族|磯丸水産|鳥メロ|塚田農場|白木屋|魚民|笑笑|金の蔵|はなの舞|庄や|晩杯屋|天狗|つぼ八/
+
   FILTERS = {
-    "izakaya" => ->(item) { item["cuisine"].to_s.include?("izakaya") || item["name"].include?("居酒屋") },
+    "izakaya" => ->(item) {
+      item["cuisine"].to_s.match?(/izakaya|yakitori|kushikatsu|robatayaki/) ||
+        item["amenity"] == "pub" ||
+        item["name"].match?(IZAKAYA_NAMES)
+    },
     "bars" => ->(item) { %w[bar pub].include?(item["amenity"]) },
     "ramen" => ->(item) { item["cuisine"].to_s.match?(/ramen|noodle/) || item["name"].match?(/ラーメン|らーめん|拉麺/) },
     "cafes" => ->(item) { item["amenity"] == "cafe" },
@@ -29,7 +39,7 @@ class NearbyPlaces
   end
 
   # Returns { "heading_id" => [Place, ...], ... }, or nil if Overpass couldn't be reached.
-  def call(filter: nil, query: nil)
+  def call(filter: nil, query: nil, preferred: [], max_walk: nil)
     raw = Rails.cache.fetch(@cache_key, expires_in: 1.week, skip_nil: true) { fetch }
     return nil if raw.nil?
 
@@ -43,17 +53,22 @@ class NearbyPlaces
       end
     end
 
-    places = items.map { |item| build_place(item) }.sort_by(&:walk_minutes)
+    pairs = items.map { |item| [item, build_place(item)] }.sort_by { |_, place| place.walk_minutes }
+    pairs = pairs.select { |_, place| place.walk_minutes <= max_walk } if max_walk
+    places = pairs.map(&:last)
 
     if filter || keyword.present?
       heading = FILTERS.key?(filter) ? filter : "results"
       return places.empty? ? {} : { heading => places.first(MAX_FILTERED) }
     end
 
-    places.group_by(&:category)
-          .transform_values { |list| list.first(PER_CATEGORY) }
-          .sort_by { |category, _| CATEGORY_ORDER.index(category) || 99 }
-          .to_h
+    grouped = places.group_by(&:category)
+                    .transform_values { |list| list.first(PER_CATEGORY) }
+                    .sort_by { |category, _| CATEGORY_ORDER.index(category) || 99 }
+                    .to_h
+
+    picks = pairs.select { |item, _| preferred.any? { |vibe| FILTERS[vibe]&.call(item) } }.map(&:last).first(8)
+    picks.any? ? { "for_you" => picks }.merge(grouped) : grouped
   end
 
   private
@@ -65,21 +80,34 @@ class NearbyPlaces
       out center 500;
     QL
 
-    http = Net::HTTP.new(ENDPOINT.host, ENDPOINT.port)
+    ENDPOINTS.each do |endpoint|
+      elements = request_elements(endpoint, query)
+      return elements.filter_map { |element| parse(element) } if elements
+    end
+
+    nil
+  end
+
+  # The elements from one Overpass server, or nil if that server failed
+  def request_elements(endpoint, query)
+    http = Net::HTTP.new(endpoint.host, endpoint.port)
     http.use_ssl = true
     http.open_timeout = 5
     http.read_timeout = 25
 
-    request = Net::HTTP::Post.new(ENDPOINT)
+    request = Net::HTTP::Post.new(endpoint)
     request["User-Agent"] = USER_AGENT
     request.set_form_data(data: query)
 
     response = http.request(request)
-    return nil unless response.is_a?(Net::HTTPSuccess)
+    unless response.is_a?(Net::HTTPSuccess)
+      Rails.logger.warn("NearbyPlaces: #{endpoint.host} answered HTTP #{response.code}")
+      return nil
+    end
 
-    JSON.parse(response.body).fetch("elements", []).filter_map { |element| parse(element) }
+    JSON.parse(response.body).fetch("elements", [])
   rescue Net::OpenTimeout, Net::ReadTimeout, SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET, JSON::ParserError => e
-    Rails.logger.warn("NearbyPlaces failed: #{e.class}: #{e.message}")
+    Rails.logger.warn("NearbyPlaces: #{endpoint.host} failed: #{e.class}: #{e.message}")
     nil
   end
 

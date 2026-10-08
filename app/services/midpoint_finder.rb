@@ -1,4 +1,6 @@
-# Ranks meeting stations so the longest trip in the group is as short as possible.
+# Ranks meeting stations for a group.
+# "fair" (default): the longest trip in the group is as short as possible.
+# "fast": the total time everyone spends travelling is as short as possible.
 class MidpointFinder
   FIRST_TRAIN_WAIT = 3 # minutes of waiting for the first train, so totals feel realistic
 
@@ -12,13 +14,13 @@ class MidpointFinder
     @graph = graph
   end
 
-  def call(limit: 5)
+  def call(limit: 5, ranking: "fair")
     times = @group_codes.map { |group| @graph.minutes_from(group) }
     reachable_by_all = times.map(&:keys).reduce(:&)
 
     ranked = reachable_by_all
       .map { |group| [group, times.map { |t| trip_minutes(t[group]) }] }
-      .sort_by { |_, minutes| [minutes.max, minutes.sum] }
+      .sort_by { |_, minutes| ranking == "fast" ? [minutes.sum, minutes.max] : [minutes.max, minutes.sum] }
       .first(limit)
 
     labels = Station.labels_for(ranked.map(&:first))

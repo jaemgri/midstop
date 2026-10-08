@@ -8,6 +8,6 @@ class PlacesController < ApplicationController
 
     lat, lon = Station.center_of(@group_code)
     @places = NearbyPlaces.new(lat: lat, lon: lon, cache_key: "places/v2/#{@group_code}")
-                          .call(filter: @filter, query: @query)
+                          .call(filter: @filter, query: @query, preferred: preferences[:vibes], max_walk: preferences[:walk])
   end
 end

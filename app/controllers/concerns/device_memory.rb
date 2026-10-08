@@ -5,9 +5,12 @@ module DeviceMemory
   MAX_SAVED_SPOTS = 20
   MAX_SAVED_GROUPS = 10
   MAX_RECENTS = 15
+  VIBES = NearbyPlaces::FILTERS.keys.freeze
+  WALK_LIMITS = [3, 5].freeze
+  RANKINGS = %w[fair fast].freeze
 
   included do
-    helper_method :home_station, :spot_saved?
+    helper_method :home_station, :spot_saved?, :preferences
   end
 
   private
@@ -71,6 +74,22 @@ module DeviceMemory
 
   def forget_recents
     cookies.delete(:recents)
+  end
+
+  def preferences
+    @preferences ||= begin
+      raw = cookies.signed[:prefs].is_a?(Hash) ? cookies.signed[:prefs] : {}
+      {
+        vibes: Array(raw["vibes"]) & VIBES,
+        walk: raw["walk"].to_i.presence_in(WALK_LIMITS),
+        ranking: raw["ranking"].presence_in(RANKINGS) || "fair"
+      }
+    end
+  end
+
+  def remember_preferences(vibes:, walk:, ranking:)
+    write_cookie(:prefs, { "vibes" => vibes, "walk" => walk, "ranking" => ranking})
+    @preferences = nil
   end
 
   def write_cookie(name, value)

@@ -41,6 +41,61 @@
 </section>
 
 <section class="mt-10">
+  <h2 class="text-xl font-black"><%= t(".vibe_title") %></h2>
+  <p class="mt-1 text-steel"><%= t(".vibe_hint") %></p>
+
+  <% chip = "press inline-block rounded-full border-2 border-rail bg-sign px-4 py-2 text-sm font-bold peer-checked:border-ink peer-checked:bg-ink peer-checked:text-sign peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink" %>
+
+  <%= form_with url: preferences_path, method: :patch, class: "mt-4 space-y-6" do %>
+    <fieldset>
+      <legend class="sr-only"><%= t(".vibe_title") %></legend>
+      <%= hidden_field_tag "vibes[]", "", id: nil %>
+      <div class="flex flex-wrap gap-2">
+        <% DeviceMemory::VIBES.each do |vibe| %>
+          <label class="cursor-pointer">
+            <input type="checkbox" name="vibes[]" value="<%= vibe %>" class="peer sr-only"
+                   <%= "checked" if preferences[:vibes].include?(vibe) %>>
+            <span class="<%= chip %>"><%= t("places.show.filters.#{vibe}") %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="font-bold"><%= t(".walk_title") %></legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <% [*DeviceMemory::WALK_LIMITS, nil].each do |limit| %>
+          <label class="cursor-pointer">
+            <input type="radio" name="walk" value="<%= limit %>" class="peer sr-only"
+                   <%= "checked" if preferences[:walk] == limit %>>
+            <span class="<%= chip %>"><%= limit ? t(".walk_minutes", count: limit) : t(".walk_any") %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="font-bold"><%= t(".ranking_title") %></legend>
+      <div class="mt-2 grid gap-2">
+        <% DeviceMemory::RANKINGS.each do |ranking| %>
+          <label class="cursor-pointer">
+            <input type="radio" name="ranking" value="<%= ranking %>" class="peer sr-only"
+                   <%= "checked" if preferences[:ranking] == ranking %>>
+            <span class="press block rounded-2xl border-2 border-rail bg-sign px-4 py-3 peer-checked:border-ink peer-checked:shadow-[3px_3px_0_0_var(--color-ink)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink">
+              <span class="block font-black"><%= t(".ranking_#{ranking}") %></span>
+              <span class="block text-sm text-steel"><%= t(".ranking_#{ranking}_hint") %></span>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <%= submit_tag t(".save_prefs"), name: nil,
+          class: "btn-pop w-full rounded-full py-3 text-lg font-black cursor-pointer" %>
+  <% end %>
+</section>
+
+<section class="mt-10">
   <h2 class="text-xl font-black"><%= t(".language") %></h2>
   <p class="mt-1 text-steel"><%= t(".language_hint") %></p>
   <div class="mt-4 flex gap-3">
