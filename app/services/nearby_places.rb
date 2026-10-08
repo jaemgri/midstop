@@ -2,6 +2,7 @@ require "net/http"
 
 # Finds food, cafés, bars and karaoke near a point using OpenStreetMap's Overpass API.
 # Everything nearby is fetched once and cached; chips and keyword searches filter that list.
+# Returns plain IDs ("food", "cafes"…); views translate them.
 class NearbyPlaces
   ENDPOINT = URI("https://overpass-api.de/api/interpreter")
   USER_AGENT = "midstop/1.0 (https://github.com/jaemgri/midstop)"
@@ -9,14 +10,14 @@ class NearbyPlaces
   METERS_PER_MINUTE = 80 # the standard walking pace in Japanese property listings
   PER_CATEGORY = 5
   MAX_FILTERED = 15
-  CATEGORY_ORDER = ["food", "cafés", "drinks", "karaoke"].freeze
+  CATEGORY_ORDER = %w[food cafes drinks karaoke].freeze
 
   FILTERS = {
-    "izakaya" => { label: "izakaya", match: ->(item) { item["cuisine"].to_s.include?("izakaya") || item["name"].include?("居酒屋") } },
-    "bars" => { label: "bars", match: ->(item) { %w[bar pub].include?(item["amenity"]) } },
-    "ramen" => { label: "ramen", match: ->(item) { item["cuisine"].to_s.match?(/ramen|noodle/) || item["name"].match?(/ラーメン|らーめん|拉麺/) } },
-    "cafes" => { label: "cafés", match: ->(item) { item["amenity"] == "cafe" } },
-    "karaoke" => { label: "karaoke", match: ->(item) { item["amenity"] == "karaoke_box" || item["name"].match?(/カラオケ|karaoke/i) } }
+    "izakaya" => ->(item) { item["cuisine"].to_s.include?("izakaya") || item["name"].include?("居酒屋") },
+    "bars" => ->(item) { %w[bar pub].include?(item["amenity"]) },
+    "ramen" => ->(item) { item["cuisine"].to_s.match?(/ramen|noodle/) || item["name"].match?(/ラーメン|らーめん|拉麺/) },
+    "cafes" => ->(item) { item["amenity"] == "cafe" },
+    "karaoke" => ->(item) { item["amenity"] == "karaoke_box" || item["name"].match?(/カラオケ|karaoke/i) }
   }.freeze
 
   Place = Data.define(:name, :name_en, :category, :walk_minutes)
@@ -27,13 +28,13 @@ class NearbyPlaces
     @cache_key = cache_key
   end
 
-  # Returns { "heading" => [Place, ...], ... }, or nil if Overpass couldn't be reached.
+  # Returns { "heading_id" => [Place, ...], ... }, or nil if Overpass couldn't be reached.
   def call(filter: nil, query: nil)
     raw = Rails.cache.fetch(@cache_key, expires_in: 1.week, skip_nil: true) { fetch }
     return nil if raw.nil?
 
     items = raw
-    items = items.select(&FILTERS[filter][:match]) if FILTERS.key?(filter)
+    items = items.select(&FILTERS[filter]) if FILTERS.key?(filter)
 
     keyword = query.to_s.strip.downcase
     if keyword.present?
@@ -45,7 +46,7 @@ class NearbyPlaces
     places = items.map { |item| build_place(item) }.sort_by(&:walk_minutes)
 
     if filter || keyword.present?
-      heading = FILTERS.dig(filter, :label) || "results"
+      heading = FILTERS.key?(filter) ? filter : "results"
       return places.empty? ? {} : { heading => places.first(MAX_FILTERED) }
     end
 
@@ -101,7 +102,7 @@ class NearbyPlaces
 
   def category_for(tags)
     case tags["amenity"]
-    when "cafe" then "cafés"
+    when "cafe" then "cafes"
     when "karaoke_box" then "karaoke"
     when "bar", "pub" then "drinks"
     else tags["cuisine"].to_s.include?("izakaya") ? "drinks" : "food"

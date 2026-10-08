@@ -12,7 +12,7 @@ class MeetupsController < ApplicationController
     @group_codes = resolve_stations.first(MAX_PEOPLE)
 
     if @group_codes.size < 2
-      redirect_to root_path, alert: "add at least two stations we can find"
+      redirect_to root_path, alert: t(".too_few")
       return
     end
 
@@ -28,7 +28,7 @@ class MeetupsController < ApplicationController
     @map_data = build_map_data(@results.first)
     remember_search(@group_codes, @results.first&.group_code) if @results.any?
   rescue KeyError
-    redirect_to root_path, alert: "couldn't find one of those stations, try picking it again"
+    redirect_to root_path, alert: t(".not_found")
   end
 
   private
@@ -43,10 +43,10 @@ class MeetupsController < ApplicationController
     lines = Line.where(code: line_codes).pluck(:code, :color, :name).to_h { |code, color, name| [code, [color, name]] }
 
     {
-      meeting: { name: best.name, romaji: best.romaji, coords: Station.center_of(best.group_code) },
+      meeting: { label: helpers.station_label(name: best.name, romaji: best.romaji), coords: Station.center_of(best.group_code) },
       people: @group_codes.zip(legs_by_person).map do |code, legs|
         {
-          name: @origins.dig(code, :romaji) || @origins.dig(code, :name),
+          name: helpers.station_label(@origins[code]),
           start: legs.first&.dig(:points, 0) || Station.center_of(code),
           legs: legs.map do |leg|
             color, line_name = lines[leg[:line_code]]

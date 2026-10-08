@@ -1,4 +1,4 @@
-<%= link_to "← saved", saved_path, class: "press inline-block text-sm font-bold text-steel hover:text-ink" %>
+<%= link_to t(".back"), saved_path, class: "press inline-block text-sm font-bold text-steel hover:text-ink" %>
 
 <div class="mt-5">
   <%= render "shared/station_sign", name: @label[:name], romaji: @label[:romaji], badges: @badges[@group_code] %>
@@ -9,9 +9,9 @@
 </div>
 
 <section class="mt-10">
-  <h2 class="text-xl font-black">around <%= @label[:romaji] || @label[:name] %></h2>
+  <h2 class="text-xl font-black"><%= t(".around", station: station_label(@label)) %></h2>
   <%= turbo_frame_tag "nearby", src: places_path(@group_code), loading: :lazy do %>
-    <p class="mt-3 text-steel">finding food and drinks near <%= @label[:name] %>…</p>
+    <p class="mt-3 text-steel"><%= t(".loading", station: @label[:name]) %></p>
   <% end %>
   <p class="mt-4 text-xs text-steel">
     Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>

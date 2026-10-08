@@ -12,8 +12,8 @@
   <div class="tactile h-4 border-y-2 border-ink" aria-hidden="true"></div>
   <% if local_assigns[:longest] %>
     <div class="flex items-baseline justify-between px-6 py-4">
-      <span class="font-medium text-steel">longest trip</span>
-      <span class="text-2xl font-black tabular-nums"><%= longest %> min</span>
+      <span class="font-medium text-steel"><%= t("shared.station_sign.longest") %></span>
+      <span class="text-2xl font-black tabular-nums"><%= t("shared.station_sign.minutes", count: longest) %></span>
     </div>
   <% end %>
 </section>

@@ -1,9 +1,9 @@
 module TabsHelper
   TABS = [
-    { label: "meet", path: :root_path, controllers: %w[meetups places], icon: :pin },
-    { label: "saved", path: :saved_path, controllers: %w[saved spots], icon: :star },
-    { label: "recent", path: :recent_path, controllers: %w[recents], icon: :clock },
-    { label: "you", path: :you_path, controllers: %w[profiles], icon: :person }
+    { key: "meet", path: :root_path, controllers: %w[meetups places], icon: :pin },
+    { key: "saved", path: :saved_path, controllers: %w[saved spots], icon: :star },
+    { key: "recent", path: :recent_path, controllers: %w[recents], icon: :clock },
+    { key: "you", path: :you_path, controllers: %w[profiles], icon: :person }
   ].freeze
 
   ICONS = {
@@ -15,7 +15,11 @@ module TabsHelper
 
   def tab_bar_tabs
     TABS.map do |tab|
-      tab.merge(href: public_send(tab[:path]), active: tab[:controllers].include?(controller_name))
+      tab.merge(
+        label: t("tabs.#{tab[:key]}"),
+        href: public_send(tab[:path]),
+        active: tab[:controllers].include?(controller_name)
+      )
     end
   end
 

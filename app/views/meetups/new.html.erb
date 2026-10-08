@@ -1,17 +1,20 @@
 <section class="relative pt-2">
   <%= render "hero" %>
   <h1 class="pr-32 text-5xl font-black leading-[0.95] tracking-tight sm:pr-40 sm:text-6xl">
-    where we<br><span class="highlight">meeting?</span>
+    <%= t(".heading_start") %><br><span class="highlight"><%= t(".heading_highlight") %></span>
   </h1>
-  <p class="mt-4 max-w-sm text-lg text-steel">
-    drop everyone's station. we'll find the stop where nobody's stuck on a 50 min train.
-  </p>
+  <p class="mt-4 max-w-sm text-lg text-steel"><%= t(".intro") %></p>
 </section>
 
 <% if home_station %>
-  <p class="mt-6 text-sm text-steel">starting from your home station, <%= home_station[:name] %>. <%= link_to "change", you_path, class: "font-medium text-ink underline" %></p>
+  <p class="mt-6 text-sm text-steel">
+    <%= t(".home_hint_html", station: home_station[:name],
+          change: link_to(t(".change"), you_path, class: "font-bold text-ink underline")) %>
+  </p>
 <% else %>
-  <p class="mt-6 text-sm text-steel"><%= link_to "set your home station", you_path, class: "font-medium text-ink underline" %> to skip typing it every time.</p>
+  <p class="mt-6 text-sm text-steel">
+    <%= t(".set_home_html", link: link_to(t(".set_home"), you_path, class: "font-bold text-ink underline")) %>
+  </p>
 <% end %>
 
 <%= form_with url: meet_path, method: :get, data: { controller: "people" },
@@ -31,26 +34,22 @@
   </template>
 
   <button type="button" data-action="people#add"
-          class="mt-4 font-medium text-steel hover:text-ink">+ add a person</button>
+          class="press mt-4 font-bold text-steel hover:text-ink"><%= t(".add_person") %></button>
 
-  <%= submit_tag "find our spot", name: nil,
+  <%= submit_tag t(".submit"), name: nil,
         class: "btn-pop mt-6 w-full rounded-full py-4 text-lg font-black cursor-pointer" %>
 <% end %>
 
 <% if @first_visit %>
   <section class="mt-10" aria-labelledby="how-it-works">
-    <h2 id="how-it-works" class="font-bold">how it works</h2>
+    <h2 id="how-it-works" class="text-xl font-black"><%= t(".how_it_works") %></h2>
     <ol class="mt-4 space-y-4">
-      <% [
-        ["add everyone's station", "type it in english or 日本語, or tap the location button."],
-        ["get the fairest stop", "nobody gets stuck with a way longer trip than everyone else."],
-        ["send it to the chat", "share the result, then find food or drinks nearby."]
-      ].each_with_index do |(title, text), index| %>
+      <% t(".steps").each_with_index do |step, index| %>
         <li class="flex gap-4">
           <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] border-ink bg-sign text-sm font-black tabular-nums" aria-hidden="true"><%= index + 1 %></span>
           <div>
-            <p class="font-bold"><%= title %></p>
-            <p class="text-steel"><%= text %></p>
+            <p class="font-bold"><%= step[:title] %></p>
+            <p class="text-steel"><%= step[:text] %></p>
           </div>
         </li>
       <% end %>

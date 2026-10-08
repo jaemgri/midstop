@@ -1,8 +1,8 @@
 <div class="flex items-baseline justify-between gap-4">
-  <h1 class="text-4xl font-black tracking-tight">recent</h1>
+  <h1 class="text-4xl font-black tracking-tight"><%= t(".title") %></h1>
   <% if @recents.any? %>
-    <%= button_to "clear all", recent_path, method: :delete,
-          form: { data: { turbo_confirm: "clear all recent searches?" } },
+    <%= button_to t(".clear"), recent_path, method: :delete,
+          form: { data: { turbo_confirm: t(".confirm") } },
           class: "press text-sm font-bold text-steel hover:text-ink cursor-pointer" %>
   <% end %>
 </div>
@@ -10,9 +10,9 @@
 <% if @recents.empty? %>
   <div class="animate-arrive mt-6 rounded-3xl border-2 border-ink bg-sign p-6 shadow-[5px_5px_0_0_var(--color-ink)]">
     <p class="text-3xl" aria-hidden="true">🕐</p>
-    <p class="mt-2 text-lg font-black">no searches yet</p>
-    <p class="mt-1 text-steel">every meetup you look up lands here, so you can reopen it or swap a station.</p>
-    <%= link_to "plan a meetup", root_path, class: "btn-pop mt-5 inline-block rounded-full px-5 py-3 font-black" %>
+    <p class="mt-2 text-lg font-black"><%= t(".empty_title") %></p>
+    <p class="mt-1 text-steel"><%= t(".empty_text") %></p>
+    <%= link_to t(".plan"), root_path, class: "btn-pop mt-5 inline-block rounded-full px-5 py-3 font-black" %>
   </div>
 <% else %>
   <ul class="stagger mt-6 space-y-3">
@@ -22,18 +22,16 @@
       <li class="rounded-2xl border border-rail bg-sign px-5 py-4">
         <div class="flex items-baseline justify-between gap-3">
           <p class="min-w-0">
-            <span class="text-lg font-black" lang="ja"><%= best&.dig(:name) || "no spot found" %></span>
+            <span class="text-lg font-black" lang="ja"><%= best&.dig(:name) || t(".no_spot") %></span>
             <span class="text-steel"><%= best&.dig(:romaji) %></span>
           </p>
           <span class="shrink-0 text-sm font-bold text-steel"><%= relative_day(entry["at"]) %></span>
         </div>
-        <p class="mt-1 text-sm text-steel">
-          from <%= codes.filter_map { |code| @labels.dig(code, :romaji) || @labels.dig(code, :name) }.to_sentence %>
-        </p>
+        <p class="mt-1 text-sm text-steel"><%= t(".from", stations: station_list(@labels, codes)) %></p>
         <div class="mt-4 flex gap-3">
-          <%= link_to "reopen", meet_path(from: codes),
+          <%= link_to t(".reopen"), meet_path(from: codes),
                 class: "btn-pop rounded-full px-4 py-2 text-sm font-black" %>
-          <%= link_to "tweak", root_path(from: codes),
+          <%= link_to t(".tweak"), root_path(from: codes),
                 class: "btn-pop btn-pop-light rounded-full px-4 py-2 text-sm font-black" %>
         </div>
       </li>

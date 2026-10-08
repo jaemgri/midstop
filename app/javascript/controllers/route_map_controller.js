@@ -39,7 +39,7 @@ export default class extends Controller {
     L.circleMarker(meeting.coords, {
       radius: 10, color: this.colors.onTactile, weight: 3, fillColor: this.colors.tactile, fillOpacity: 1
     })
-      .bindTooltip(meeting.romaji || meeting.name, { permanent: true, direction: "top", offset: [0, -10], className: "map-label map-label-meet" })
+      .bindTooltip(meeting.label, { permanent: true, direction: "top", offset: [0, -10], className: "map-label map-label-meet" })
       .addTo(this.map)
 
     this.map.fitBounds(bounds, { padding: [32, 32] })

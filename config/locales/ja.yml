@@ -1,0 +1,172 @@
+ja:
+  support:
+    array:
+      words_connector: "、"
+      two_words_connector: "と"
+      last_word_connector: "、"
+
+  date:
+    formats:
+      short_day: "%-m月%-d日"
+
+  relative_day:
+    today: 今日
+    yesterday: 昨日
+
+  tabs:
+    meet: 集合
+    saved: 保存
+    recent: 履歴
+    you: マイページ
+
+  station_picker:
+    finding: 最寄り駅を探し中…
+    no_location: このブラウザでは位置情報が使えないよ
+    location_failed: 位置情報を取得できなかった
+    too_far: 3km以内に駅がないよ
+
+  shared:
+    station_sign:
+      longest: 最長の移動
+      minutes: "%{count}分"
+
+  meetups:
+    new:
+      heading_start: どこで
+      heading_highlight: 集まる？
+      intro: みんなの最寄り駅を入れるだけ。誰かひとりだけ電車50分、をなくす駅を見つけるよ。
+      home_hint_html: "最寄り駅（%{station}）からスタート。%{change}"
+      change: 変更
+      set_home_html: "%{link}しておくと、毎回入力しなくていいよ。"
+      set_home: 最寄り駅を登録
+      add_person: "+ 人を追加"
+      submit: 集合場所を探す
+      how_it_works: 使い方
+      steps:
+        - title: みんなの駅を入れる
+          text: 英語でも日本語でもOK。位置情報ボタンも使えるよ。
+        - title: いちばん公平な駅をゲット
+          text: 誰かだけ移動が長すぎる、がない駅を選ぶよ。
+        - title: グループに送る
+          text: 結果をシェアして、近くのごはんや飲み屋も探せる。
+    person_row:
+      placeholder: 駅名（例：shibuya・渋谷）
+    show:
+      back: "← 駅を変える"
+      no_station: みんなが電車で行ける駅がなかった 😵 別の組み合わせで試してみて。
+      heading_html: "%{people}にいちばん公平な駅"
+      people: "%{count}人"
+      map_label: "%{station}までのみんなのルートの地図"
+      share_title: "%{station}で集合"
+      share_text: "いちばん公平な集合場所：%{name}（%{romaji}）。最長%{minutes}分。"
+      share: シェア 📤
+      copy: リンクをコピー
+      copied: コピーしたよ
+      copy_failed: コピーできなかった
+      everyones_trip: みんなの移動
+      already_there: 移動なし 🏠
+      minutes: "%{count}分"
+      around: "%{station}周辺"
+      also_fair: ここもアリ
+      longest_html: "最長%{minutes}"
+      from: "%{station}から"
+      no_trip: 移動なし
+      too_few: 見つかる駅を2つ以上入れてね
+      not_found: 駅が見つからなかった。もう一度選んでみて。
+
+  places:
+    show:
+      filters:
+        all: すべて
+        izakaya: 居酒屋
+        bars: バー
+        ramen: ラーメン
+        cafes: カフェ
+        karaoke: カラオケ
+      headings:
+        food: ごはん
+        cafes: カフェ
+        drinks: 飲み
+        karaoke: カラオケ
+        izakaya: 居酒屋
+        bars: バー
+        ramen: ラーメン
+        results: 検索結果
+      search_placeholder: 検索（例：寿司・焼き鳥・burger）
+      search_label: "%{station}周辺のお店を検索"
+      go: 検索
+      failed: お店を読み込めなかった 😵 少ししてからもう一度試してみて。
+      nothing: 歩いてすぐの範囲には見つからなかった。
+      show_all: すべて表示
+      walk: "徒歩%{count}分"
+
+  saved:
+    index:
+      title: 保存
+      empty_title: まだ何も保存してないよ
+      empty_text: 結果から、よく行く駅に★をつけたり、いつメンを保存したりできるよ。ここに並ぶよ。
+      plan: 集合場所を探す
+      crews: いつメン
+      remove: 削除
+      remove_label: "%{name}を削除"
+      find: 集合場所を探す
+      no_crews: 結果からいつメンを保存すると、ワンタップでまた探せるよ。
+      spots: よく行く駅
+      no_spots: 結果から集合場所に★をつけると、ここに保存されるよ。
+
+  saved_spots:
+    button:
+      save: 保存
+      saved: 保存済み
+
+  saved_groups:
+    form:
+      save_crew: いつメンとして保存
+      placeholder: 名前をつける（例：大学の友達）
+      save: 保存
+    saved:
+      text_html: "「%{name}」で保存したよ ✌️ %{link}から見れるよ。"
+      link: 保存タブ
+    create:
+      default_name: いつメン
+
+  recents:
+    index:
+      title: 履歴
+      clear: 全部消す
+      confirm: 履歴を全部消す？
+      empty_title: まだ検索してないよ
+      empty_text: 調べた集合場所はここに残るから、また開いたり駅を変えたりできるよ。
+      plan: 集合場所を探す
+      no_spot: 見つからなかった
+      from: "%{stations}から"
+      reopen: もう一度見る
+      tweak: 駅を変える
+    clear:
+      cleared: 履歴を消したよ
+
+  profiles:
+    show:
+      title: マイページ
+      home: 最寄り駅 🏠
+      home_hint: 集合場所を探すとき、自動で入力されるよ。
+      save: 保存
+      clear: 最寄り駅を消す
+      language: 言語
+      language_hint: 英語と日本語に対応してるよ。
+      about: midstopについて
+      about_text: 誰かだけ移動が長すぎる、がない駅を見つけるアプリ。移動時間は距離と乗り換えからの目安だよ。
+      credits_html: "駅データ：%{station_database}（CC BY 4.0）。地図とお店：© %{osm}"
+
+  home_stations:
+    update:
+      saved: 最寄り駅を保存したよ ✌️
+      not_found: その駅が見つからなかった。リストから選んでみて。
+    destroy:
+      cleared: 最寄り駅を消したよ
+
+  spots:
+    show:
+      back: "← 保存"
+      around: "%{station}周辺"
+      loading: "%{station}周辺のごはん・飲み屋を探し中…"

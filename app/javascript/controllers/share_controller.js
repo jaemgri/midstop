@@ -2,9 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["share", "copy"]
-  static values = { url: String, title: String, text: String }
+  static values = { url: String, title: String, text: String, copied: String, failed: String }
 
   connect() {
+    this.copyLabel = this.copyTarget.textContent
+
     // Phones and Safari have a share sheet; elsewhere, fall back to copying the link.
     if (navigator.share) {
       this.shareTarget.hidden = false
@@ -23,12 +25,12 @@ export default class extends Controller {
   async copy() {
     try {
       await navigator.clipboard.writeText(this.urlValue)
-      this.copyTarget.textContent = "Link copied"
+      this.copyTarget.textContent = this.copiedValue || "Link copied"
     } catch (error) {
       console.error(error)
-      this.copyTarget.textContent = "Couldn't copy"
+      this.copyTarget.textContent = this.failedValue || "Couldn't copy"
     }
     clearTimeout(this.timer)
-    this.timer = setTimeout(() => (this.copyTarget.textContent = "Copy link"), 2000)
+    this.timer = setTimeout(() => (this.copyTarget.textContent = this.copyLabel), 2000)
   }
 }

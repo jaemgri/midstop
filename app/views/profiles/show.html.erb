@@ -1,18 +1,19 @@
-<h1 class="text-4xl font-black tracking-tight">you</h1>
+<h1 class="text-4xl font-black tracking-tight"><%= t(".title") %></h1>
 
 <section class="mt-6 rounded-3xl border-2 border-ink bg-sign p-5 shadow-[5px_5px_0_0_var(--color-ink)]">
-  <h2 class="text-xl font-black">home station 🏠</h2>
-  <p class="mt-1 text-steel">filled in as your station every time you plan a meetup.</p>
+  <h2 class="text-xl font-black"><%= t(".home") %></h2>
+  <p class="mt-1 text-steel"><%= t(".home_hint") %></p>
 
   <%= form_with url: home_station_path, method: :patch, class: "mt-4" do %>
     <div data-controller="station-picker"
          data-station-picker-url-value="<%= stations_path %>"
          data-station-picker-nearest-url-value="<%= nearest_station_path %>"
+         data-station-picker-messages-value="<%= t("station_picker").to_json %>"
          data-action="click@window->station-picker#closeOnOutside"
          class="relative flex gap-2">
       <input type="text" name="name" autocomplete="off"
              value="<%= [home_station&.dig(:name), home_station&.dig(:romaji)].compact.join(' ') %>"
-             placeholder="station, e.g. shibuya or 渋谷"
+             placeholder="<%= t("meetups.person_row.placeholder") %>"
              aria-label="Home station"
              data-station-picker-target="input"
              data-action="input->station-picker#search keydown.esc->station-picker#close"
@@ -29,21 +30,35 @@
            class="absolute left-0 right-12 top-full z-10 mt-1 overflow-hidden rounded-2xl border border-rail bg-sign shadow-lg"></div>
     </div>
 
-    <%= submit_tag "save", name: nil,
+    <%= submit_tag t(".save"), name: nil,
           class: "btn-pop mt-5 w-full rounded-full py-3 text-lg font-black cursor-pointer" %>
   <% end %>
 
   <% if home_station %>
-    <%= button_to "clear home station", home_station_path, method: :delete,
+    <%= button_to t(".clear"), home_station_path, method: :delete,
           class: "press mt-4 w-full rounded-full py-2 font-bold text-steel hover:text-ink cursor-pointer" %>
   <% end %>
 </section>
 
 <section class="mt-10">
-  <h2 class="text-xl font-black">about midstop</h2>
-  <p class="mt-2 text-steel">finds the station where nobody in the crew has a way longer trip than everyone else. travel times are estimates based on distance and transfers.</p>
+  <h2 class="text-xl font-black"><%= t(".language") %></h2>
+  <p class="mt-1 text-steel"><%= t(".language_hint") %></p>
+  <div class="mt-4 flex gap-3">
+    <% { en: "English", ja: "日本語" }.each do |code, label| %>
+      <%= button_to label, locale_path, method: :patch, params: { locale: code },
+            lang: code,
+            "aria-pressed": I18n.locale == code,
+            class: "#{I18n.locale == code ? 'btn-pop' : 'btn-pop btn-pop-light'} rounded-full px-5 py-2 font-black cursor-pointer" %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mt-10">
+  <h2 class="text-xl font-black"><%= t(".about") %></h2>
+  <p class="mt-2 text-steel"><%= t(".about_text") %></p>
   <p class="mt-4 text-sm text-steel">
-    station data from <%= link_to "station_database", "https://github.com/Seo-4d696b75/station_database", class: "underline", target: "_blank", rel: "noopener" %>
-    (CC BY 4.0). map and places © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>.
+    <%= t(".credits_html",
+          station_database: link_to("station_database", "https://github.com/Seo-4d696b75/station_database", class: "underline", target: "_blank", rel: "noopener"),
+          osm: link_to("OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener")) %>
   </p>
 </section>

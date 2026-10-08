@@ -1,3 +1,5 @@
 <p id="save_group" class="animate-arrive font-medium text-steel">
-  saved as <strong class="text-ink"><%= name %></strong> ✌️ find it in <%= link_to "saved", saved_path, class: "text-ink underline" %>.
+  <%= t("saved_groups.saved.text_html",
+        name: tag.strong(name, class: "text-ink"),
+        link: link_to(t("saved_groups.saved.link"), saved_path, class: "text-ink underline")) %>
 </p>

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :saved_spots, only: [:create, :destroy], param: :group_code
   resources :saved_groups, only: [:create, :destroy]
   get "spots/:group_code", to: "spots#show", as: :spot
+  patch "you/language", to: "locales#update", as: :locale
 
   get "saved", to: "saved#index", as: :saved
   get "recent", to: "recents#index", as: :recent

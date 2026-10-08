@@ -1,14 +1,18 @@
 import { Controller } from "@hotwired/stimulus"
 
 const FALLBACK_COLOR = "#5d6876"
-const DEFAULT_PLACEHOLDER = "station, e.g. shibuya or 渋谷"
 
 export default class extends Controller {
   static targets = ["input", "value", "list"]
-  static values = { url: String, nearestUrl: String }
+  static values = { url: String, nearestUrl: String, messages: Object }
 
   connect() {
     this.requestId = 0
+    this.defaultPlaceholder = this.inputTarget.placeholder
+  }
+
+  message(key, fallback) {
+    return this.messagesValue[key] || fallback
   }
 
   // --- Autocomplete ---
@@ -96,16 +100,18 @@ export default class extends Controller {
   // --- Use my location ---
 
   locate() {
-    if (!navigator.geolocation) return this.locateFailed("location isn't available in this browser")
+    if (!navigator.geolocation) {
+      return this.locateFailed(this.message("no_location", "location isn't available in this browser"))
+    }
 
     this.close()
     this.inputTarget.value = ""
     this.valueTarget.value = ""
-    this.inputTarget.placeholder = "finding your nearest station…"
+    this.inputTarget.placeholder = this.message("finding", "finding your nearest station…")
 
     navigator.geolocation.getCurrentPosition(
       (position) => this.lookUpNearest(position.coords),
-      () => this.locateFailed("couldn't get your location"),
+      () => this.locateFailed(this.message("location_failed", "couldn't get your location")),
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
     )
   }
@@ -114,10 +120,10 @@ export default class extends Controller {
     const response = await fetch(`${this.nearestUrlValue}?lat=${latitude}&lon=${longitude}`, {
       headers: { Accept: "application/json" }
     })
-    if (!response.ok) return this.locateFailed("no station within 3 km of you")
+    if (!response.ok) return this.locateFailed(this.message("too_far", "no station within 3 km of you"))
 
     this.pick(await response.json())
-    this.inputTarget.placeholder = DEFAULT_PLACEHOLDER
+    this.inputTarget.placeholder = this.defaultPlaceholder
   }
 
   locateFailed(message) {

@@ -5,7 +5,7 @@ class SavedGroupsController < ApplicationController
     codes = requested.select { |code| real.include?(code) }
     return head(:unprocessable_entity) if codes.size < 2
 
-    name = params[:name].to_s.strip.first(30).presence || "My group"
+    name = params[:name].to_s.strip.first(30).presence || t(".default_name")
     group = { "id" => SecureRandom.alphanumeric(8), "name" => name, "codes" => codes }
     write_saved(groups: [group, *saved_groups])
 

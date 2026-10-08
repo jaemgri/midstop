@@ -1,31 +1,172 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " and "
+      last_word_connector: ", and "
+
+  date:
+    formats:
+      short_day: "%-d %b"
+
+  relative_day:
+    today: today
+    yesterday: yesterday
+
+  tabs:
+    meet: meet
+    saved: saved
+    recent: recent
+    you: you
+
+  station_picker:
+    finding: finding your nearest station…
+    no_location: location isn't available in this browser
+    location_failed: couldn't get your location
+    too_far: no station within 3 km of you
+
+  shared:
+    station_sign:
+      longest: longest trip
+      minutes: "%{count} min"
+
+  meetups:
+    new:
+      heading_start: where we
+      heading_highlight: meeting?
+      intro: drop everyone's station. we'll find the stop where nobody's stuck on a 50 min train.
+      home_hint_html: "starting from your home station, %{station}. %{change}"
+      change: change
+      set_home_html: "%{link} to skip typing it every time."
+      set_home: set your home station
+      add_person: "+ add someone"
+      submit: find our spot
+      how_it_works: how it works
+      steps:
+        - title: add everyone's station
+          text: type it in english or 日本語, or tap the location button.
+        - title: get the fairest stop
+          text: nobody gets stuck with a way longer trip than everyone else.
+        - title: send it to the chat
+          text: share the result, then find food or drinks nearby.
+    person_row:
+      placeholder: station, e.g. shibuya or 渋谷
+    show:
+      back: "← change stations"
+      no_station: no station everyone can reach by train 😵 try a different mix.
+      heading_html: "the fairest spot for %{people}"
+      people: "%{count} of you"
+      map_label: "Map of everyone's route to %{station}"
+      share_title: "Meet at %{station}"
+      share_text: "fairest spot for us: %{name} (%{romaji}). longest trip %{minutes} min."
+      share: share 📤
+      copy: copy link
+      copied: link copied
+      copy_failed: couldn't copy
+      everyones_trip: everyone's trip
+      already_there: already there 🏠
+      minutes: "%{count} min"
+      around: "around %{station}"
+      also_fair: also pretty fair
+      longest_html: "longest %{minutes}"
+      from: "from %{station}"
+      no_trip: already there
+      too_few: add at least two stations we can find
+      not_found: couldn't find one of those stations, try picking it again
+
+  places:
+    show:
+      filters:
+        all: all
+        izakaya: izakaya
+        bars: bars
+        ramen: ramen
+        cafes: cafés
+        karaoke: karaoke
+      headings:
+        food: food
+        cafes: cafés
+        drinks: drinks
+        karaoke: karaoke
+        izakaya: izakaya
+        bars: bars
+        ramen: ramen
+        results: results
+      search_placeholder: search, e.g. sushi, 焼き鳥, burger
+      search_label: "Search places near %{station}"
+      go: go
+      failed: couldn't load places right now 😵 try again in a minute.
+      nothing: nothing mapped for that within a short walk.
+      show_all: show everything
+      walk: "%{count} min walk"
+
+  saved:
+    index:
+      title: saved
+      empty_title: nothing saved yet
+      empty_text: star your go-to spots and save your crews from any result. they'll live here.
+      plan: plan a meetup
+      crews: your crews
+      remove: remove
+      remove_label: "Remove %{name}"
+      find: find our spot
+      no_crews: save the crew from any result to re-run it in one tap.
+      spots: go-to spots
+      no_spots: star a meeting spot from any result to keep it here.
+
+  saved_spots:
+    button:
+      save: save spot
+      saved: saved
+
+  saved_groups:
+    form:
+      save_crew: save this crew
+      placeholder: name it, e.g. uni crew
+      save: save
+    saved:
+      text_html: "saved as %{name} ✌️ find it in %{link}."
+      link: saved
+    create:
+      default_name: my crew
+
+  recents:
+    index:
+      title: recent
+      clear: clear all
+      confirm: clear all recent searches?
+      empty_title: no searches yet
+      empty_text: every meetup you look up lands here, so you can reopen it or swap a station.
+      plan: plan a meetup
+      no_spot: no spot found
+      from: "from %{stations}"
+      reopen: reopen
+      tweak: tweak
+    clear:
+      cleared: recent searches cleared
+
+  profiles:
+    show:
+      title: you
+      home: home station 🏠
+      home_hint: filled in as your station every time you plan a meetup.
+      save: save
+      clear: clear home station
+      language: language
+      language_hint: midstop speaks english and 日本語.
+      about: about midstop
+      about_text: finds the station where nobody in the crew has a way longer trip than everyone else. travel times are estimates based on distance and transfers.
+      credits_html: "station data from %{station_database} (CC BY 4.0). map and places © %{osm}."
+
+  home_stations:
+    update:
+      saved: home station saved ✌️
+      not_found: couldn't find that station. try picking it from the list.
+    destroy:
+      cleared: home station cleared
+
+  spots:
+    show:
+      back: "← saved"
+      around: "around %{station}"
+      loading: "finding food and drinks near %{station}…"
