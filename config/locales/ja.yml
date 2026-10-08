@@ -80,6 +80,10 @@ ja:
       heading_fast_html: "%{people}の合計移動がいちばん短い駅"
 
   places:
+    place:
+      walk: "徒歩%{count}分"
+      hours: 営業時間
+      map: 地図
     show:
       filters:
         all: すべて
@@ -174,6 +178,7 @@ ja:
       about: midstopについて
       about_text: 誰かだけ移動が長すぎる、がない駅を見つけるアプリ。移動時間は距離と乗り換えからの目安だよ。
       credits_html: "駅データ：%{station_database}（CC BY 4.0）。地図とお店：© %{osm}"
+
   home_stations:
     update:
       saved: 最寄り駅を保存したよ ✌️

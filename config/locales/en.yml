@@ -76,6 +76,10 @@ en:
       not_found: couldn't find one of those stations, try picking it again
 
   places:
+    place:
+      walk: "%{count} min walk"
+      hours: hours
+      map: map
     show:
       filters:
         all: all

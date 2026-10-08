@@ -1,5 +1,5 @@
 # A place to eat or drink near a station, from either Hot Pepper or OpenStreetMap.
-# Only name, category and walk_minutes are always present; the rest come from Hot Pepper.
+# name, category and walk_minutes are always present; the rest depend on the source.
 Place = Data.define(
   :name,
   :category,
@@ -10,7 +10,10 @@ Place = Data.define(
   :tagline,
   :photo,
   :url,
-  :open
+  :open,
+  :address,
+  :lat,
+  :lon
 ) do
   def initialize(
     name:,
@@ -22,7 +25,10 @@ Place = Data.define(
     tagline: nil,
     photo: nil,
     url: nil,
-    open: nil
+    open: nil,
+    address: nil,
+    lat: nil,
+    lon: nil
   )
     super
   end

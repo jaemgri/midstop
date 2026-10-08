@@ -110,7 +110,7 @@ class HotPepperPlaces
   end
 
   def search(genre_codes:, keyword:)
-    cache_key = ["hotpepper/v1", @group_code, genre_codes.join("+"), keyword].join("/")
+    cache_key = ["hotpepper/v2", @group_code, genre_codes.join("+"), keyword].join("/")
 
     Rails.cache.fetch(cache_key, expires_in: 1.day, skip_nil: true) do
       params = { lat: @lat, lng: @lon, range: RANGE, count: COUNT }
@@ -131,6 +131,7 @@ class HotPepperPlaces
       "photo" => shop.dig("photo", "pc", "m") || shop.dig("photo", "mobile", "l"),
       "url" => shop.dig("urls", "pc"),
       "open" => shop["open"],
+      "address" => shop["address"],
       "lat" => shop["lat"].to_f,
       "lon" => shop["lng"].to_f
     }
@@ -147,7 +148,10 @@ class HotPepperPlaces
       tagline: shop["tagline"],
       photo: shop["photo"],
       url: shop["url"],
-      open: shop["open"]
+      open: shop["open"],
+      address: shop["address"],
+      lat: shop["lat"],
+      lon: shop["lon"]
     )
   end
 

@@ -141,7 +141,9 @@ class NearbyPlaces
       name: item["name"],
       name_en: item["name_en"],
       category: item["category"],
-      walk_minutes: [(meters / METERS_PER_MINUTE).ceil, 1].max
+      walk_minutes: [(meters / METERS_PER_MINUTE).ceil, 1].max,
+      lat: item["lat"],
+      lon: item["lon"]
     )
   end
 end
