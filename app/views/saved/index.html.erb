@@ -1,5 +1,26 @@
 <h1 class="text-4xl font-black tracking-tight"><%= t(".title") %></h1>
 
+<% if @crews.any? %>
+  <section class="mt-6">
+    <h2 class="text-xl font-black"><%= t(".your_crews") %></h2>
+    <ul class="mt-3 divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
+      <% @crews.each do |crew| %>
+        <li>
+          <%= link_to crew_path(crew), class: "press flex items-center justify-between gap-3 px-5 py-4 hover:bg-platform" do %>
+            <span class="min-w-0">
+              <span class="block truncate font-bold"><%= crew.name %></span>
+              <span class="block truncate text-sm text-steel">
+                <%= crew.members.select(&:claimed?).map(&:name).to_sentence %>
+              </span>
+            </span>
+            <span class="text-steel" aria-hidden="true">›</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>
+
 <% if @spots.empty? && @groups.empty? %>
   <div class="animate-arrive mt-6 rounded-3xl border-2 border-ink bg-sign p-6 shadow-[5px_5px_0_0_var(--color-ink)]">
     <p class="text-3xl" aria-hidden="true">⭐️</p>

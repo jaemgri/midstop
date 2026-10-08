@@ -5,13 +5,14 @@ module DeviceMemory
   MAX_SAVED_SPOTS = 20
   MAX_SAVED_GROUPS = 10
   MAX_RECENTS = 15
+  MAX_CREWS = 20
   VIBES = NearbyPlaces::FILTERS.keys.freeze
   WALK_LIMITS = [3, 5].freeze
   RANKINGS = %w[fair fast].freeze
   BUDGETS = [2000, 3000, 4000, 5000].freeze
 
   included do
-    helper_method :home_station, :spot_saved?, :preferences
+    helper_method :home_station, :spot_saved?, :preferences, :my_seat_in
   end
 
   private
@@ -34,6 +35,31 @@ module DeviceMemory
 
   def forget_home_station
     cookies.delete(:home_station)
+  end
+
+  # --- Crews ---
+  # Stored as { "crew_token" => "seat_token" } for every crew this device has a seat in
+
+  def crew_seats
+    raw = cookies.signed[:crews]
+    raw.is_a?(Hash) ? raw : {}
+  end
+
+  def remember_crew_seat(crew, seat_token)
+    others = crew_seats.except(crew.token)
+    write_cookie(:crews, { crew.token => seat_token }.merge(others).first(MAX_CREWS).to_h)
+  end
+
+  def forget_crew_seat(crew)
+    write_cookie(:crews, crew_seats.except(crew.token))
+  end
+
+  # This device's seat in the crew, or nil
+  def my_seat_in(crew)
+    seat_token = crew_seats[crew.token]
+    return nil if seat_token.blank?
+
+    crew.members.find { |seat| seat.claimed? && ActiveSupport::SecurityUtils.secure_compare(seat.token, seat_token) }
   end
 
   # --- Saved spots and groups ---

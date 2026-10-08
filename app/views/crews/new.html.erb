@@ -1,0 +1,46 @@
+<% content_for :title, t(".title") %>
+
+<div class="animate-arrive">
+  <h1 class="text-3xl font-black"><%= t(".title") %></h1>
+  <p class="mt-2 text-steel"><%= t(".hint") %></p>
+
+  <% if @error %>
+    <p class="mt-4 rounded-2xl border-2 border-ink bg-sign px-4 py-3 font-bold" role="alert"><%= @error %></p>
+  <% end %>
+
+  <%= form_with url: crews_path, class: "mt-6 space-y-6" do %>
+    <% @codes.each do |code| %>
+      <%= hidden_field_tag "from[]", code, id: nil %>
+    <% end %>
+
+    <div>
+      <%= label_tag :crew_name, t(".crew_name"), class: "font-bold" %>
+      <%= text_field_tag :crew_name, params[:crew_name], required: true, maxlength: 40,
+            placeholder: t(".crew_name_placeholder"),
+            class: "mt-2 w-full rounded-2xl border-2 border-rail bg-sign px-4 py-3 placeholder:text-steel focus:border-ink focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= label_tag :your_name, t(".your_name"), class: "font-bold" %>
+      <%= text_field_tag :your_name, params[:your_name], required: true, maxlength: 30, autocomplete: "given-name",
+            class: "mt-2 w-full rounded-2xl border-2 border-rail bg-sign px-4 py-3 focus:border-ink focus:outline-none" %>
+    </div>
+
+    <fieldset>
+      <legend class="font-bold"><%= t(".your_station") %></legend>
+      <div class="mt-2 grid gap-2">
+        <% @codes.each_with_index do |code, index| %>
+          <label class="cursor-pointer">
+            <input type="radio" name="seat" value="<%= index %>" class="peer sr-only" required
+                   <%= "checked" if params[:seat].to_s == index.to_s || (params[:seat].blank? && code == home_station&.dig(:group_code)) %>>
+            <span class="press block rounded-2xl border-2 border-rail bg-sign px-4 py-3 font-bold peer-checked:border-ink peer-checked:shadow-[3px_3px_0_0_var(--color-ink)] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink">
+              <%= station_label(@labels[code]) %>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <%= submit_tag t(".create"), name: nil, class: "btn-pop w-full cursor-pointer rounded-full py-3 text-lg font-black" %>
+  <% end %>
+</div>

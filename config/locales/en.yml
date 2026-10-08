@@ -30,6 +30,40 @@ en:
       longest: longest trip
       minutes: "%{count} min"
 
+  crews:
+    new:
+      title: make it a crew 👥
+      hint: name your crew, pick your station, then send the link to the group chat.
+      crew_name: crew name
+      crew_name_placeholder: e.g. friday night crew
+      your_name: your name
+      your_station: which station's yours?
+      create: make the crew
+    create:
+      created: crew made ✌️ send the invite so everyone can claim their station.
+      invalid: add a crew name, your name, and pick your station.
+    show:
+      label: crew
+      seats: "%{claimed} of %{total} in"
+      find_spot: find our spot 📍
+      invite: invite 📤
+      share_text: "join %{crew} on midstop and claim your station 🚉"
+      whos_in: who's in
+      you: " (you)"
+      open_seat: open seat
+      your_name: your name
+      thats_me: that's me
+      leave: leave
+      leave_confirm: leave this crew? your seat opens up for someone else.
+  crew_seats:
+    update:
+      need_name: add your name first.
+      already_in: you're already in this crew.
+      welcome: "you're in %{crew} 🙌"
+      taken: someone just took that seat. pick another?
+    destroy:
+      left: "you left %{crew}."
+
   meetups:
     new:
       heading_start: where we
@@ -74,6 +108,7 @@ en:
       no_trip: already there
       too_few: add at least two stations we can find
       not_found: couldn't find one of those stations, try picking it again
+      make_crew: make it a crew 👥
 
   places:
     place:
@@ -122,6 +157,7 @@ en:
       no_crews: save the crew from any result to re-run it in one tap.
       spots: go-to spots
       no_spots: star a meeting spot from any result to keep it here.
+      your_crews: your crews 👥
 
   saved_spots:
     button:

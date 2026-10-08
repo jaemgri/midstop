@@ -43,8 +43,10 @@
     <%= render "saved_spots/button", code: best.group_code %>
   </div>
 
-  <div class="mt-4">
+  <div class="mt-4 flex flex-wrap items-center gap-3">
     <%= render "saved_groups/form", codes: @group_codes %>
+    <%= link_to t(".make_crew"), new_crew_path(from: @group_codes),
+          class: "btn-pop-light press rounded-full px-5 py-2 font-black" %>
   </div>
 
   <section class="mt-10">

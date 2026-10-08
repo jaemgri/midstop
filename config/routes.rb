@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   patch "you/language", to: "locales#update", as: :locale
   patch "you/preferences", to: "preferences#update", as: :preferences
 
+  resources :crews, only: [:new, :create, :show], param: :token do
+    resources :seats, only: [:update, :destroy], controller: "crew_seats"
+  end
+
   get "saved", to: "saved#index", as: :saved
   get "recent", to: "recents#index", as: :recent
   delete "recent", to: "recents#clear"

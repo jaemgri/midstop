@@ -7,3 +7,11 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 end
+
+private
+
+  # Crew tokens are letters and numbers only, so anything after them
+  # (like invite text pasted along with the link) is ignored.
+  def crew_token_from(value)
+    value.to_s[/\A[A-Za-z0-9]+/]
+  end

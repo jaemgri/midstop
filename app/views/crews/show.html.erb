@@ -1,0 +1,62 @@
+<% content_for :title, @crew.name %>
+
+<div class="animate-arrive">
+  <p class="text-sm font-bold text-steel"><%= t(".label") %></p>
+  <h1 class="text-3xl font-black"><%= @crew.name %></h1>
+  <p class="mt-1 text-steel">
+    <%= t(".seats", claimed: @crew.members.count(&:claimed?), total: @crew.members.size) %>
+  </p>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    <%= link_to t(".find_spot"), meet_path(from: @crew.station_codes),
+          class: "btn-pop rounded-full px-6 py-3 text-lg font-black" %>
+
+    <button type="button" class="btn-pop-light cursor-pointer rounded-full px-6 py-3 text-lg font-black"
+            data-controller="share"
+            data-action="share#share"
+            data-share-url-value="<%= crew_url(@crew) %>"
+            data-share-title-value="<%= @crew.name %>"
+            data-share-text-value="<%= t(".share_text", crew: @crew.name) %>"
+            data-share-copied-value="<%= t("meetups.show.copied") %>"
+            data-share-failed-value="<%= t("meetups.show.copy_failed") %>">
+      <%= t(".invite") %>
+    </button>
+  </div>
+
+  <h2 class="mt-10 text-xl font-black"><%= t(".whos_in") %></h2>
+  <ul class="mt-3 divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
+    <% @crew.members.each do |seat| %>
+      <li class="px-5 py-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <p class="truncate font-bold">
+              <% if seat.claimed? %>
+                <%= seat.name %>
+                <% if seat == @my_seat %><span class="text-steel"><%= t(".you") %></span><% end %>
+              <% else %>
+                <span class="text-steel"><%= t(".open_seat") %></span>
+              <% end %>
+            </p>
+            <p class="truncate text-sm text-steel">🚉 <%= station_label(@labels[seat.group_code]) %></p>
+          </div>
+
+          <% if seat == @my_seat %>
+            <%= button_to t(".leave"), crew_seat_path(@crew, seat), method: :delete,
+                  form: { data: { turbo_confirm: t(".leave_confirm") } },
+                  class: "press shrink-0 cursor-pointer text-sm font-bold text-steel underline underline-offset-4" %>
+          <% end %>
+        </div>
+
+        <% if !seat.claimed? && @my_seat.nil? %>
+          <%= form_with url: crew_seat_path(@crew, seat), method: :patch, class: "mt-3 flex gap-2" do %>
+            <%= label_tag "name_#{seat.id}", t(".your_name"), class: "sr-only" %>
+            <%= text_field_tag :name, nil, id: "name_#{seat.id}", required: true, maxlength: 30,
+                  placeholder: t(".your_name"), autocomplete: "given-name",
+                  class: "min-w-0 flex-1 rounded-full border-2 border-rail bg-platform px-4 py-2 placeholder:text-steel focus:border-ink focus:outline-none" %>
+            <%= submit_tag t(".thats_me"), name: nil, class: "btn-pop cursor-pointer rounded-full px-4 font-black" %>
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

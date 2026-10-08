@@ -34,6 +34,40 @@ ja:
       longest: 最長の移動
       minutes: "%{count}分"
 
+  crews:
+    new:
+      title: クルーを作る 👥
+      hint: クルー名と自分の駅を選んで、グループチャットにリンクを送ろう。
+      crew_name: クルー名
+      crew_name_placeholder: 例：金曜の飲み会メンバー
+      your_name: 名前
+      your_station: どれが自分の駅？
+      create: クルーを作る
+    create:
+      created: クルーできたよ ✌️ 招待を送って、みんなに自分の駅を選んでもらおう。
+      invalid: クルー名と名前を入れて、自分の駅を選んでね。
+    show:
+      label: クルー
+      seats: "%{total}人中%{claimed}人参加中"
+      find_spot: 集合場所を探す 📍
+      invite: 招待する 📤
+      share_text: "midstopで%{crew}に参加して、自分の駅を選んでね 🚉"
+      whos_in: メンバー
+      you: "（自分）"
+      open_seat: 空いてる席
+      your_name: 名前
+      thats_me: これ自分
+      leave: 抜ける
+      leave_confirm: このクルーを抜ける？席は空いて、ほかの人が入れるようになるよ。
+  crew_seats:
+    update:
+      need_name: 先に名前を入れてね。
+      already_in: もうこのクルーに入ってるよ。
+      welcome: "%{crew}に参加したよ 🙌"
+      taken: その席、ちょうど埋まっちゃった。ほかの席を選んでね。
+    destroy:
+      left: "%{crew}を抜けたよ。"
+
   meetups:
     new:
       heading_start: どこで
@@ -78,6 +112,7 @@ ja:
       too_few: 見つかる駅を2つ以上入れてね
       not_found: 駅が見つからなかった。もう一度選んでみて。
       heading_fast_html: "%{people}の合計移動がいちばん短い駅"
+      make_crew: クルーを作る 👥
 
   places:
     place:
@@ -126,6 +161,7 @@ ja:
       no_crews: 結果からいつメンを保存すると、ワンタップでまた探せるよ。
       spots: よく行く駅
       no_spots: 結果から集合場所に★をつけると、ここに保存されるよ。
+      your_crews: あなたのクルー 👥
 
   saved_spots:
     button:

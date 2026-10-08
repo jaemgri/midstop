@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  crew: one
+  group_code: 1
+  name: MyString
+  token: MyString
+
+two:
+  crew: two
+  group_code: 1
+  name: MyString
+  token: MyString

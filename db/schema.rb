@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_05_072841) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_08_094146) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "crew_members", force: :cascade do |t|
+    t.bigint "crew_id", null: false
+    t.integer "group_code", null: false
+    t.string "name"
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crew_id"], name: "index_crew_members_on_crew_id"
+    t.index ["token"], name: "index_crew_members_on_token", unique: true
+  end
+
+  create_table "crews", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "token", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_crews_on_token", unique: true
+  end
 
   create_table "lines", force: :cascade do |t|
     t.integer "code"
@@ -54,4 +73,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_05_072841) do
     t.index ["line_code"], name: "index_stations_on_line_code"
     t.index ["search_key"], name: "index_stations_on_search_key"
   end
+
+  add_foreign_key "crew_members", "crews"
 end
