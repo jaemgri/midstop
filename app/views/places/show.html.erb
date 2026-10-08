@@ -39,12 +39,15 @@
       <ul class="stagger mt-2 divide-y divide-rail rounded-2xl border border-rail bg-sign">
         <% places.each do |place| %>
           <li>
-            <%= link_to "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode("#{place.name} #{@station[:name]}")}",
+            <%= link_to place.url.presence || "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode("#{place.name} #{@station[:name]}")}",
                   target: "_blank", rel: "noopener",
                   class: "press flex items-baseline justify-between gap-4 px-5 py-3 hover:bg-platform" do %>
               <span class="min-w-0">
                 <span class="block truncate font-medium"><%= place.name %></span>
-                <% if place.name_en.present? && place.name_en != place.name %>
+                <% details = [place.genre, place.budget].compact_blank.join(" · ") %>
+                <% if details.present? %>
+                  <span class="block truncate text-sm text-steel"><%= details %></span>
+                <% elsif place.name_en.present? && place.name_en != place.name %>
                   <span class="block truncate text-sm text-steel"><%= place.name_en %></span>
                 <% end %>
               </span>
@@ -55,4 +58,11 @@
       </ul>
     <% end %>
   <% end %>
+    <p class="mt-4 text-xs text-steel">
+    <% if @source == :hotpepper %>
+      Powered by <%= link_to "ホットペッパーグルメ Webサービス", "http://webservice.recruit.co.jp/", class: "underline", target: "_blank", rel: "noopener" %>
+    <% else %>
+      Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
+    <% end %>
+  </p>
 <% end %>

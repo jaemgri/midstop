@@ -7,7 +7,16 @@ class PlacesController < ApplicationController
     @query = params[:q].to_s.strip.first(40)
 
     lat, lon = Station.center_of(@group_code)
-    @places = NearbyPlaces.new(lat: lat, lon: lon, cache_key: "places/v2/#{@group_code}")
-                          .call(filter: @filter, query: @query, preferred: preferences[:vibes], max_walk: preferences[:walk])
+    options = { filter: @filter, query: @query, preferred: preferences[:vibes], max_walk: preferences[:walk] }
+
+    if HotPepperPlaces.available?
+      @places = HotPepperPlaces.new(group_code: @group_code, lat: lat, lon: lon).call(**options)
+      @source = :hotpepper unless @places.nil?
+    end
+
+    if @places.nil?
+      @places = NearbyPlaces.new(lat: lat, lon: lon, cache_key: "places/v4/#{@group_code}").call(**options)
+      @source = :osm
+    end
   end
 end

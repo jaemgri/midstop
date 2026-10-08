@@ -72,9 +72,6 @@
     <%= turbo_frame_tag "nearby", src: places_path(best.group_code), loading: :lazy do %>
       <p class="mt-3 text-steel"><%= t("spots.show.loading", station: best.name) %></p>
     <% end %>
-    <p class="mt-4 text-xs text-steel">
-      Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
-    </p>
   </section>
 
   <% if others.any? %>

@@ -30,8 +30,6 @@ class NearbyPlaces
     "karaoke" => ->(item) { item["amenity"] == "karaoke_box" || item["name"].match?(/カラオケ|karaoke/i) }
   }.freeze
 
-  Place = Data.define(:name, :name_en, :category, :walk_minutes)
-
   def initialize(lat:, lon:, cache_key:)
     @lat = lat
     @lon = lon
