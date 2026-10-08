@@ -75,6 +75,19 @@
     </fieldset>
 
     <fieldset>
+      <legend class="font-bold"><%= t(".budget_title") %></legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <% [*DeviceMemory::BUDGETS, nil].each do |amount| %>
+          <label class="cursor-pointer">
+            <input type="radio" name="budget" value="<%= amount || "any" %>" class="peer sr-only"
+                   <%= "checked" if preferences[:budget] == amount %>>
+            <span class="<%= chip %>"><%= amount ? t(".budget_upto", amount: number_with_delimiter(amount)) : t(".walk_any") %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend class="font-bold"><%= t(".ranking_title") %></legend>
       <div class="mt-2 grid gap-2">
         <% DeviceMemory::RANKINGS.each do |ranking| %>

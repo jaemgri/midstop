@@ -1,55 +1,66 @@
 <%= turbo_frame_tag "nearby" do %>
-  <% chip = "press inline-block whitespace-nowrap rounded-full border-2 px-4 py-2 text-sm font-bold transition-colors" %>
-  <% on = "#{chip} border-ink bg-ink text-sign" %>
-  <% off = "#{chip} border-rail bg-sign hover:border-ink" %>
-  <% showing_all = @filter.nil? && @query.blank? %>
-
-  <nav aria-label="Filter places" class="-mx-5 mt-3 overflow-x-auto px-5 pb-1">
-    <ul class="flex w-max gap-2">
-      <li>
-        <%= link_to t(".filters.all"), places_path(@group_code), class: (showing_all ? on : off), "aria-current": (showing_all ? "true" : nil) %>
-      </li>
-      <% NearbyPlaces::FILTERS.each_key do |key| %>
-        <li>
-          <%= link_to t(".filters.#{key}"), places_path(@group_code, type: key),
-                class: (@filter == key ? on : off), "aria-current": (@filter == key ? "true" : nil) %>
-        </li>
-      <% end %>
-    </ul>
+  <%# Genre chips %>
+  <nav aria-label="<%= t(".filters_label") %>" class="flex gap-2 overflow-x-auto pb-1">
+    <% [nil, *NearbyPlaces::FILTERS.keys].each do |filter| %>
+      <% active = @filter == filter && @query.blank? %>
+      <%= link_to t(".filters.#{filter || "all"}"),
+            places_path(@group_code, type: filter, budget: params[:budget].presence),
+            aria: { current: active ? "true" : nil },
+            class: "press shrink-0 rounded-full border-2 px-4 py-2 font-bold #{active ? "border-ink bg-ink text-sign" : "border-rail bg-sign"}" %>
+    <% end %>
   </nav>
 
-  <%= form_with url: places_path(@group_code), method: :get, role: "search", class: "mt-3 flex gap-2" do %>
-    <%= search_field_tag :q, @query, placeholder: t(".search_placeholder"),
-          "aria-label": t(".search_label", station: station_label(@station)),
-          class: "flex-1 min-w-0 rounded-full border-2 border-rail bg-sign px-4 py-2 text-base placeholder:text-steel focus:border-ink" %>
-    <%= submit_tag t(".go"), name: nil,
-          class: "btn-pop rounded-full px-5 font-black cursor-pointer" %>
+  <%# Budget chips (Hot Pepper only: OpenStreetMap has no prices) %>
+  <% if @source == :hotpepper %>
+    <nav aria-label="<%= t(".budget_label") %>" class="mt-3 flex gap-2 overflow-x-auto pb-1">
+      <% [nil, *DeviceMemory::BUDGETS].each do |amount| %>
+        <% active = @budget == amount %>
+        <%= link_to (amount ? t(".budget_upto", amount: number_with_delimiter(amount)) : t(".budget_any")),
+              places_path(@group_code, type: @filter, q: @query.presence, budget: amount || "any"),
+              aria: { current: active ? "true" : nil },
+              class: "press shrink-0 rounded-full border-2 px-3 py-1 text-sm font-bold #{active ? "border-ink bg-ink text-sign" : "border-rail bg-sign"}" %>
+      <% end %>
+    </nav>
   <% end %>
 
+  <%# Keyword search %>
+  <%= form_with url: places_path(@group_code), method: :get, role: "search", class: "mt-4 flex gap-2" do %>
+    <%= hidden_field_tag :budget, params[:budget] if params[:budget].present? %>
+    <%= label_tag :q, t(".search_label"), class: "sr-only" %>
+    <%= search_field_tag :q, @query, placeholder: t(".search_placeholder"), autocomplete: "off",
+          class: "min-w-0 flex-1 rounded-full border-2 border-rail bg-sign px-5 py-3 placeholder:text-steel focus:border-ink focus:outline-none" %>
+    <%= submit_tag t(".go"), name: nil, class: "btn-pop cursor-pointer rounded-full px-5 font-black" %>
+  <% end %>
+
+  <%# Results %>
   <% if @places.nil? %>
-    <p class="mt-4 text-steel"><%= t(".failed") %></p>
+    <p class="mt-6 text-steel"><%= t(".unavailable") %></p>
   <% elsif @places.empty? %>
-    <p class="mt-4 text-steel">
-      <%= t(".nothing") %>
-      <%= link_to t(".show_all"), places_path(@group_code), class: "font-bold text-ink underline" %>
+    <p class="mt-6 text-steel">
+      <%= t(".empty") %>
+      <%= link_to t(".show_everything"), places_path(@group_code, budget: "any"),
+            class: "font-bold text-ink underline underline-offset-4" %>
     </p>
   <% else %>
     <% @places.each do |heading, places| %>
-      <h3 class="mt-5 text-sm font-black text-steel"><%= t(".headings.#{heading}") %></h3>
-      <ul class="stagger mt-2 divide-y divide-rail rounded-2xl border border-rail bg-sign">
-        <% places.each do |place| %>
-          <li>
-          <%= render "places/place", place: place, station_name: @station[:name] %>
-        <% end %>
-      </ul>
+      <section class="mt-6">
+        <h3 class="mb-2 text-sm font-bold text-steel"><%= t(".headings.#{heading}") %></h3>
+        <ul class="divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
+          <% places.each do |place| %>
+            <%= render "places/place", place: place, station_name: @station[:name] %>
+          <% end %>
+        </ul>
+      </section>
     <% end %>
   <% end %>
-    <p class="mt-4 text-xs text-steel">
-      <% if @source == :hotpepper %>
-        Powered by <%= link_to "ホットペッパーグルメ Webサービス", "http://webservice.recruit.co.jp/", class: "underline", target: "_blank", rel: "noopener" %>
-        ・ 画像提供：ホットペッパー グルメ
-      <% else %>
-        Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
-      <% end %>
-    </p>
+
+  <%# Credit for whichever source answered %>
+  <p class="mt-4 text-xs text-steel">
+    <% if @source == :hotpepper %>
+      Powered by <%= link_to "ホットペッパーグルメ Webサービス", "http://webservice.recruit.co.jp/", class: "underline", target: "_blank", rel: "noopener" %>
+      ・ 画像提供：ホットペッパー グルメ
+    <% else %>
+      Place data © <%= link_to "OpenStreetMap contributors", "https://www.openstreetmap.org/copyright", class: "underline", target: "_blank", rel: "noopener" %>
+    <% end %>
+  </p>
 <% end %>

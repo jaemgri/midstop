@@ -5,12 +5,14 @@ class PlacesController < ApplicationController
 
     @filter = params[:type].presence_in(NearbyPlaces::FILTERS.keys)
     @query = params[:q].to_s.strip.first(40)
+    # A budget chip ("any" or an amount) wins; otherwise use the saved preference
+    @budget = params.key?(:budget) ? params[:budget].to_i.presence_in(DeviceMemory::BUDGETS) : preferences[:budget]
 
     lat, lon = Station.center_of(@group_code)
     options = { filter: @filter, query: @query, preferred: preferences[:vibes], max_walk: preferences[:walk] }
 
     if HotPepperPlaces.available?
-      @places = HotPepperPlaces.new(group_code: @group_code, lat: lat, lon: lon).call(**options)
+      @places = HotPepperPlaces.new(group_code: @group_code, lat: lat, lon: lon).call(**options, max_budget: @budget)
       @source = :hotpepper unless @places.nil?
     end
 

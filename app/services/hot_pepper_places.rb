@@ -69,7 +69,7 @@ class HotPepperPlaces
     @lon = lon
   end
 
-  def call(filter: nil, query: nil, preferred: [], max_walk: nil)
+  def call(filter: nil, query: nil, preferred: [], max_walk: nil, max_budget: nil)
     keyword = query.to_s.strip
     genre_codes = []
 
@@ -81,6 +81,7 @@ class HotPepperPlaces
 
     shops = search(genre_codes: genre_codes, keyword: keyword)
     return nil if shops.nil?
+    shops = shops.select { |shop| within_budget?(shop["budget"], max_budget) } if max_budget
 
     places = shops.map { |shop| build_place(shop) }.sort_by(&:walk_minutes)
     places = places.select { |place| place.walk_minutes <= max_walk } if max_walk
@@ -100,6 +101,12 @@ class HotPepperPlaces
   end
 
   private
+
+  # "2001～3000円" → top of band is 3000. Shops with no listed budget are kept.
+  def within_budget?(band, max_budget)
+    numbers = band.to_s.scan(/\d+/).map(&:to_i)
+    numbers.empty? || numbers.last <= max_budget
+  end
 
   def codes_for(filter)
     pattern = GENRE_PATTERNS[filter]

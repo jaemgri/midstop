@@ -85,6 +85,7 @@ ja:
       hours: 営業時間
       map: 地図
     show:
+      filters_label: お店の種類
       filters:
         all: すべて
         izakaya: 居酒屋
@@ -92,7 +93,14 @@ ja:
         ramen: ラーメン
         cafes: カフェ
         karaoke: カラオケ
+      budget_label: 1人あたりの予算
+      budget_any: 予算指定なし
+      budget_upto: "〜%{amount}円"
+      search_label: お店を検索
+      search_placeholder: 検索　例：寿司、焼き鳥、バーガー
+      go: 検索
       headings:
+        for_you: あなた向け ✨
         food: ごはん
         cafes: カフェ
         drinks: 飲み
@@ -101,14 +109,9 @@ ja:
         bars: バー
         ramen: ラーメン
         results: 検索結果
-        for_you: あなた向け ✨
-      search_placeholder: 検索（例：寿司・焼き鳥・burger）
-      search_label: "%{station}周辺のお店を検索"
-      go: 検索
-      failed: お店を読み込めなかった 😵 少ししてからもう一度試してみて。
-      nothing: 歩いてすぐの範囲には見つからなかった。
-      show_all: すべて表示
-      walk: "徒歩%{count}分"
+      empty: 近くにはなかったみたい。
+      show_everything: ぜんぶ見る
+      unavailable: お店を読み込めなかった。少し待ってからもう一回試してね 🙏
 
   saved:
     index:

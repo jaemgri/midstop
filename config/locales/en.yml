@@ -81,6 +81,7 @@ en:
       hours: hours
       map: map
     show:
+      filters_label: type of place
       filters:
         all: all
         izakaya: izakaya
@@ -88,7 +89,14 @@ en:
         ramen: ramen
         cafes: cafés
         karaoke: karaoke
+      budget_label: budget per person
+      budget_any: any budget
+      budget_upto: "up to ¥%{amount}"
+      search_label: search places
+      search_placeholder: search, e.g. sushi, 焼き鳥, burger
+      go: go
       headings:
+        for_you: for you ✨
         food: food
         cafes: cafés
         drinks: drinks
@@ -97,14 +105,9 @@ en:
         bars: bars
         ramen: ramen
         results: results
-        for_you: for you ✨
-      search_placeholder: search, e.g. sushi, 焼き鳥, burger
-      search_label: "Search places near %{station}"
-      go: go
-      failed: couldn't load places right now 😵 try again in a minute.
-      nothing: nothing mapped for that within a short walk.
-      show_all: show everything
-      walk: "%{count} min walk"
+      empty: nothing mapped for that within a short walk.
+      show_everything: show everything
+      unavailable: couldn't load places right now. try again in a bit 🙏
 
   saved:
     index:

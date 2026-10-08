@@ -8,6 +8,7 @@ module DeviceMemory
   VIBES = NearbyPlaces::FILTERS.keys.freeze
   WALK_LIMITS = [3, 5].freeze
   RANKINGS = %w[fair fast].freeze
+  BUDGETS = [2000, 3000, 4000, 5000].freeze
 
   included do
     helper_method :home_station, :spot_saved?, :preferences
@@ -82,13 +83,14 @@ module DeviceMemory
       {
         vibes: Array(raw["vibes"]) & VIBES,
         walk: raw["walk"].to_i.presence_in(WALK_LIMITS),
-        ranking: raw["ranking"].presence_in(RANKINGS) || "fair"
+        ranking: raw["ranking"].presence_in(RANKINGS) || "fair",
+        budget: raw["budget"].to_i.presence_in(BUDGETS)
       }
     end
   end
 
-  def remember_preferences(vibes:, walk:, ranking:)
-    write_cookie(:prefs, { "vibes" => vibes, "walk" => walk, "ranking" => ranking})
+  def remember_preferences(vibes:, walk:, ranking:, budget:)
+    write_cookie(:prefs, { "vibes" => vibes, "walk" => walk, "ranking" => ranking, "budget" => budget })
     @preferences = nil
   end
 
