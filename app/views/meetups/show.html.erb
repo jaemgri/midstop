@@ -2,7 +2,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <% end %>
 
-<% best, *others = @results %>
+<% best = @results.first %>
 
 <%= link_to t(".back"), root_path(from: @group_codes), class: "press inline-block text-sm font-bold text-steel hover:text-ink" %>
 
@@ -16,17 +16,7 @@
   </h1>
   <p class="mt-1 text-steel"><%= station_list(@origins, @group_codes) %></p>
 
-  <div class="mt-5">
-    <%= render "shared/station_sign", name: best.name, romaji: best.romaji, longest: best.longest,
-          badges: @badges[best.group_code], aria_label: "Fairest station" %>
-  </div>
-
-  <div data-controller="route-map"
-       data-route-map-data-value="<%= @map_data.to_json %>"
-       class="animate-arrive isolate mt-5 h-72 overflow-hidden rounded-3xl border-2 border-ink bg-sign [animation-delay:120ms]"
-       role="img"
-       aria-label="<%= t(".map_label", station: station_label(best_label)) %>"></div>
-
+  <%# Group actions: these are about the whole search, not one station %>
   <div class="mt-5 flex flex-wrap items-center gap-3">
     <div data-controller="share"
          data-share-url-value="<%= meet_url(from: @group_codes) %>"
@@ -40,71 +30,57 @@
       <button type="button" data-share-target="copy" data-action="share#copy"
               class="btn-pop rounded-full px-5 py-2 font-black cursor-pointer"><%= t(".copy") %></button>
     </div>
-    <%= render "saved_spots/button", code: best.group_code %>
-  </div>
-
-  <div class="mt-4 flex flex-wrap items-center gap-3">
     <%= render "saved_groups/form", codes: @group_codes %>
     <%= link_to t(".make_crew"), new_crew_path(from: @group_codes),
           class: "btn-pop-light press rounded-full px-5 py-2 font-black" %>
   </div>
 
-  <section class="mt-10">
-    <h2 class="text-xl font-black"><%= t(".everyones_trip") %></h2>
-    <ul class="stagger mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
-      <% @group_codes.each_with_index do |code, person| %>
-        <li class="flex items-center justify-between gap-4 px-5 py-3">
-          <span class="flex min-w-0 items-center gap-2">
-            <span class="flex shrink-0 gap-1"><%= line_badges(@badges[code], size: :sm, limit: 2) %></span>
-            <span class="min-w-0 truncate">
-              <span lang="ja"><%= @origins.dig(code, :name) %></span>
-              <span class="text-steel"><%= @origins.dig(code, :romaji) %></span>
-            </span>
-          </span>
-          <span class="shrink-0 font-black tabular-nums">
-            <%= best.minutes[person].zero? ? t(".already_there") : t(".minutes", count: best.minutes[person]) %>
-          </span>
-        </li>
-      <% end %>
-    </ul>
-  </section>
+  <%# The station carousel %>
+  <section data-controller="carousel"
+           data-action="keydown->carousel#keydown"
+           aria-roledescription="carousel"
+           aria-label="<%= t(".carousel_label") %>"
+           class="mt-8">
 
-  <section class="mt-10">
-    <h2 class="text-xl font-black"><%= t(".around", station: station_label(best_label)) %></h2>
-    <%= turbo_frame_tag "nearby", src: places_path(best.group_code), loading: :lazy do %>
-      <p class="mt-3 text-steel"><%= t("spots.show.loading", station: best.name) %></p>
-    <% end %>
-  </section>
+    <div class="flex items-center gap-2">
+      <button type="button" data-carousel-target="prev" data-action="carousel#previous"
+              aria-label="<%= t(".prev") %>"
+              class="press grid size-10 shrink-0 cursor-pointer place-items-center rounded-full border-2 border-ink bg-sign text-xl font-black disabled:cursor-default disabled:opacity-30">‹</button>
 
-  <% if others.any? %>
-    <section class="mt-10">
-      <h2 class="text-xl font-black"><%= t(".also_fair") %></h2>
-      <div class="stagger mt-3 divide-y divide-rail rounded-2xl border border-rail bg-sign">
-        <% others.each do |result| %>
-          <details class="group px-5 py-3">
-            <summary class="press flex cursor-pointer list-none items-baseline justify-between gap-4">
-              <span>
-                <span class="font-bold" lang="ja"><%= result.name %></span>
-                <span class="text-steel"><%= result.romaji %></span>
-              </span>
-              <span class="shrink-0 text-steel tabular-nums">
-                <%= t(".longest_html", minutes: tag.span(t(".minutes", count: result.longest), class: "font-black text-ink")) %>
-                <span class="ml-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">›</span>
-              </span>
-            </summary>
-            <ul class="mt-2 space-y-1 text-sm text-steel">
-              <% @group_codes.each_with_index do |code, person| %>
-                <li class="flex justify-between">
-                  <span><%= t(".from", station: station_label(@origins[code])) %></span>
-                  <span class="tabular-nums">
-                    <%= result.minutes[person].zero? ? t(".no_trip") : t(".minutes", count: result.minutes[person]) %>
-                  </span>
-                </li>
+      <nav aria-label="<%= t(".stops_label") %>" class="min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ol class="flex w-max items-center py-1">
+          <% @results.each_with_index do |result, index| %>
+            <li class="flex items-center">
+              <% if index.positive? %>
+                <span class="h-1 w-4 bg-rail" aria-hidden="true"></span>
               <% end %>
-            </ul>
-          </details>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
+              <button type="button"
+                      data-carousel-target="stop"
+                      data-action="carousel#jump"
+                      data-carousel-index-param="<%= index %>"
+                      class="press flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border-2 border-rail bg-sign px-3 py-1.5 text-sm font-bold aria-[current=true]:border-ink aria-[current=true]:bg-tactile aria-[current=true]:text-on-tactile">
+                <span class="tabular-nums opacity-60"><%= index + 1 %></span>
+                <span><%= station_label(name: result.name, romaji: result.romaji) %></span>
+              </button>
+            </li>
+          <% end %>
+        </ol>
+      </nav>
+
+      <button type="button" data-carousel-target="next" data-action="carousel#next"
+              aria-label="<%= t(".next") %>"
+              class="press grid size-10 shrink-0 cursor-pointer place-items-center rounded-full border-2 border-ink bg-sign text-xl font-black disabled:cursor-default disabled:opacity-30">›</button>
+    </div>
+
+    <% if @results.size > 1 %>
+      <p class="mt-2 text-center text-xs text-steel"><%= t(".swipe_hint") %></p>
+    <% end %>
+
+    <div data-carousel-target="track"
+         class="animate-arrive relative mt-4 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <% @results.each_with_index do |result, index| %>
+        <%= render "meetups/stop", result: result, rank: index, total: @results.size, best: best %>
+      <% end %>
+    </div>
+  </section>
 <% end %>

@@ -1,0 +1,56 @@
+<% label = { name: result.name, romaji: result.romaji } %>
+
+<article data-carousel-target="slide"
+         aria-roledescription="slide"
+         aria-label="<%= t("meetups.show.slide_label", n: rank + 1, total: total, station: station_label(label)) %>"
+         class="w-full shrink-0 snap-center snap-always">
+  <p class="mb-2 text-sm font-bold text-steel">
+    <% if rank.zero? %>
+      <%= t("meetups.show.rank_first") %>
+    <% elsif result.longest == best.longest %>
+      <%= t("meetups.show.rank_tie", n: rank + 1) %>
+    <% else %>
+      <%= t("meetups.show.rank_other", n: rank + 1, extra: result.longest - best.longest) %>
+    <% end %>
+  </p>
+
+  <%= render "shared/station_sign", name: result.name, romaji: result.romaji, longest: result.longest,
+        badges: @badges[result.group_code], aria_label: station_label(label) %>
+
+  <div data-controller="route-map"
+       data-route-map-data-value="<%= @map_data[result.group_code].to_json %>"
+       class="isolate mt-4 h-64 overflow-hidden rounded-3xl border-2 border-ink bg-sign"
+       role="img"
+       aria-label="<%= t("meetups.show.map_label", station: station_label(label)) %>"></div>
+
+  <div class="mt-4">
+    <%= render "saved_spots/button", code: result.group_code %>
+  </div>
+
+  <section class="mt-8">
+    <h3 class="text-lg font-black"><%= t("meetups.show.everyones_trip") %></h3>
+    <ul class="mt-2 divide-y divide-rail rounded-2xl border border-rail bg-sign">
+      <% @group_codes.each_with_index do |code, person| %>
+        <li class="flex items-center justify-between gap-4 px-5 py-3">
+          <span class="flex min-w-0 items-center gap-2">
+            <span class="flex shrink-0 gap-1"><%= line_badges(@badges[code], size: :sm, limit: 2) %></span>
+            <span class="min-w-0 truncate">
+              <span lang="ja"><%= @origins.dig(code, :name) %></span>
+              <span class="text-steel"><%= @origins.dig(code, :romaji) %></span>
+            </span>
+          </span>
+          <span class="shrink-0 font-black tabular-nums">
+            <%= result.minutes[person].zero? ? t("meetups.show.already_there") : t("meetups.show.minutes", count: result.minutes[person]) %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section class="mt-8">
+    <h3 class="text-lg font-black"><%= t("meetups.show.around", station: station_label(label)) %></h3>
+    <%= turbo_frame_tag "nearby-#{result.group_code}", src: places_path(result.group_code, compact: 1), loading: :lazy, class: "mt-2 block" do %>
+      <p class="mt-3 text-steel"><%= t("spots.show.loading", station: result.name) %></p>
+    <% end %>
+  </section>
+</article>

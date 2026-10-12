@@ -1,10 +1,27 @@
 import { Controller } from "@hotwired/stimulus"
 import * as L from "leaflet"
 
+// Draws only once the map scrolls (or swipes) into view, so a carousel of
+// five stations doesn't load five maps up front.
 export default class extends Controller {
   static values = { data: Object }
 
   connect() {
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        this.observer.disconnect()
+        this.draw()
+      }
+    })
+    this.observer.observe(this.element)
+  }
+
+  disconnect() {
+    this.observer?.disconnect()
+    this.map?.remove()
+  }
+
+  draw() {
     const { meeting, people } = this.dataValue
     const css = getComputedStyle(document.documentElement)
     const token = (name, fallback) => css.getPropertyValue(name).trim() || fallback
@@ -66,9 +83,5 @@ export default class extends Controller {
         radius: 4, color: this.colors.ink, weight: 2, fillColor: this.colors.sign, fillOpacity: 1
       }).addTo(this.map)
     })
-  }
-
-  disconnect() {
-    this.map?.remove()
   }
 }

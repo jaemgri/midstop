@@ -105,14 +105,19 @@ ja:
       already_there: 移動なし 🏠
       minutes: "%{count}分"
       around: "%{station}周辺"
-      also_fair: ここもアリ
-      longest_html: "最長%{minutes}"
-      from: "%{station}から"
-      no_trip: 移動なし
       too_few: 見つかる駅を2つ以上入れてね
       not_found: 駅が見つからなかった。もう一度選んでみて。
       heading_fast_html: "%{people}の合計移動がいちばん短い駅"
       make_crew: クルーを作る 👥
+      carousel_label: 公平な駅
+      stops_label: 駅をくらべる
+      prev: 前の駅
+      next: 次の駅
+      swipe_hint: スワイプか › で駅をくらべよう
+      slide_label: "%{total}駅中%{n}番目：%{station}"
+      rank_first: 🏆 いちばん公平
+      rank_tie: "%{n}位・最長の移動は同じ"
+      rank_other: "%{n}位・最長の移動が+%{extra}分"
 
   places:
     place:
@@ -134,6 +139,7 @@ ja:
       search_label: お店を検索
       search_placeholder: 検索　例：寿司、焼き鳥、バーガー
       go: 検索
+      see_more: もっと見る →
       headings:
         for_you: あなた向け ✨
         food: ごはん

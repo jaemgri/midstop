@@ -109,6 +109,15 @@ en:
       too_few: add at least two stations we can find
       not_found: couldn't find one of those stations, try picking it again
       make_crew: make it a crew 👥
+      carousel_label: fairest stations
+      stops_label: compare stations
+      prev: previous station
+      next: next station
+      swipe_hint: swipe or tap › to compare stations
+      slide_label: "%{n} of %{total}: %{station}"
+      rank_first: 🏆 fairest pick
+      rank_tie: "#%{n} · same longest trip"
+      rank_other: "#%{n} · +%{extra} min longest trip"
 
   places:
     place:
@@ -127,6 +136,7 @@ en:
       budget_label: budget per person
       budget_any: any budget
       budget_upto: "up to ¥%{amount}"
+      see_more: see more places →
       search_label: search places
       search_placeholder: search, e.g. sushi, 焼き鳥, burger
       go: go

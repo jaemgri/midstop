@@ -24,8 +24,9 @@ class MeetupsController < ApplicationController
 
     @origins = Station.labels_for(@group_codes)
     @results = MidpointFinder.new(@group_codes).call(limit: 5, ranking: preferences[:ranking])
-    @badges = Station.badges_for([*@group_codes, @results.first&.group_code].compact.uniq)
-    @map_data = build_map_data(@results.first)
+    @badges = Station.badges_for([*@group_codes, *@results.map(&:group_code)].uniq)
+    # One map per station in the carousel, keyed by station
+    @map_data = @results.to_h { |result| [result.group_code, build_map_data(result)] }
     remember_search(@group_codes, @results.first&.group_code) if @results.any?
   rescue KeyError
     redirect_to root_path, alert: t(".not_found")
@@ -33,17 +34,15 @@ class MeetupsController < ApplicationController
 
   private
 
-  def build_map_data(best)
-    return nil if best.nil?
-
+  def build_map_data(result)
     graph = TransitGraph.instance
-    legs_by_person = @group_codes.map { |code| graph.legs_between(code, best.group_code) }
+    legs_by_person = @group_codes.map { |code| graph.legs_between(code, result.group_code) }
 
     line_codes = legs_by_person.flatten.map { |leg| leg[:line_code] }.uniq
     lines = Line.where(code: line_codes).pluck(:code, :color, :name).to_h { |code, color, name| [code, [color, name]] }
 
     {
-      meeting: { label: helpers.station_label(name: best.name, romaji: best.romaji), coords: Station.center_of(best.group_code) },
+      meeting: { label: helpers.station_label(name: result.name, romaji: result.romaji), coords: Station.center_of(result.group_code) },
       people: @group_codes.zip(legs_by_person).map do |code, legs|
         {
           name: helpers.station_label(@origins[code]),
