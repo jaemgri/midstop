@@ -212,6 +212,8 @@ ja:
       walk_title: 駅からの徒歩
       walk_any: 指定なし
       walk_minutes: "%{count}分以内"
+      budget_title: いつもの予算（1人あたり）
+      budget_upto: "%{amount}円まで"
       ranking_title: 集合場所の選び方
       ranking_fair: いちばん公平
       ranking_fair_hint: 誰かだけ移動が長すぎる、をなくす

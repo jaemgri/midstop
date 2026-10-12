@@ -212,6 +212,8 @@ en:
       walk_title: max walk from the station
       walk_any: any
       walk_minutes: "within %{count} min"
+      budget_title: usual budget per person
+      budget_upto: "up to ¥%{amount}"
       ranking_title: "pick the spot that's…"
       ranking_fair: fairest
       ranking_fair_hint: nobody's trip is way longer than everyone else's
