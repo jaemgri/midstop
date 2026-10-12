@@ -28,7 +28,8 @@ class CrewsController < ApplicationController
 
   def show
     @crew = Crew.includes(:members).find_by!(token: crew_token_from(params[:token]))
-    @labels = Station.labels_for(@crew.station_codes)
+    @visits = @crew.visits.recent_first.limit(50)
+    @labels = Station.labels_for([*@crew.station_codes, *@visits.map(&:group_code)].uniq)
     @my_seat = my_seat_in(@crew)
   end
 

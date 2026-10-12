@@ -19,6 +19,16 @@ en:
     recent: recent
     you: you
 
+  visits:
+    went_here: we went here ✓
+    logged_short: logged
+    been_here: "been here · %{date}"
+    date_format: "%b %-d, %Y"
+    create:
+      logged: "%{place} added to your history ✓"
+    destroy:
+      removed: removed from your history.
+
   station_picker:
     finding: finding your nearest station…
     no_location: location isn't available in this browser
@@ -52,6 +62,14 @@ en:
       you: " (you)"
       open_seat: open seat
       your_name: your name
+      history: where we've been 📍
+      no_history: "nothing yet. find your spot, then tap “we went here” at the place you end up."
+      history_count:
+        one: 1 place so far
+        other: "%{count} places so far"
+      logged_by: "logged by %{name}"
+      remove_visit: remove
+      remove_confirm: "remove %{place} from your history?"
       thats_me: that's me
       leave: leave
       leave_confirm: leave this crew? your seat opens up for someone else.
@@ -95,6 +113,7 @@ en:
       share_text: "fairest spot for us: %{name} (%{romaji}). longest trip %{minutes} min."
       share: share 📤
       copy: copy link
+      crew_mode: "planning with %{crew} 👥 tap “we went here” on a place to add it to your history."
       copied: link copied
       copy_failed: couldn't copy
       heading_fast_html: "the quickest spot overall for %{people}"

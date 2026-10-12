@@ -23,6 +23,7 @@ class MeetupsController < ApplicationController
     end
 
     @origins = Station.labels_for(@group_codes)
+    @crew = crew_in_context
     @results = MidpointFinder.new(@group_codes).call(limit: 5, ranking: preferences[:ranking])
     @badges = Station.badges_for([*@group_codes, *@results.map(&:group_code)].uniq)
     # One map per station in the carousel, keyed by station

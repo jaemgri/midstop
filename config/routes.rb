@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   resources :crews, only: [:new, :create, :show], param: :token do
     resources :seats, only: [:update, :destroy], controller: "crew_seats"
+    resources :visits, only: [:create, :destroy]
   end
 
   get "saved", to: "saved#index", as: :saved

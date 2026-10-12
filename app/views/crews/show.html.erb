@@ -8,7 +8,7 @@
   </p>
 
   <div class="mt-6 flex flex-wrap gap-3">
-    <%= link_to t(".find_spot"), meet_path(from: @crew.station_codes),
+    <%= link_to t(".find_spot"), meet_path(from: @crew.station_codes, crew: (@crew.token if @my_seat)),
           class: "btn-pop rounded-full px-6 py-3 text-lg font-black" %>
 
     <button type="button" class="btn-pop-light cursor-pointer rounded-full px-6 py-3 text-lg font-black"
@@ -59,4 +59,42 @@
       </li>
     <% end %>
   </ul>
+  <h2 class="mt-10 text-xl font-black"><%= t(".history") %></h2>
+  <% if @visits.empty? %>
+    <p class="mt-2 text-steel"><%= t(".no_history") %></p>
+  <% else %>
+    <p class="mt-1 text-steel"><%= t(".history_count", count: @crew.visits.count) %></p>
+    <ul class="mt-3 divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
+      <% @visits.each do |visit| %>
+        <li class="flex items-start gap-3 px-5 py-4">
+          <% if visit.photo.present? %>
+            <%= image_tag visit.photo, alt: "", loading: "lazy", width: 56, height: 56,
+                  class: "size-14 shrink-0 rounded-xl border-2 border-rail bg-rail object-cover" %>
+          <% end %>
+          <div class="min-w-0 flex-1">
+            <p class="font-bold leading-snug">
+              <% if visit.url.present? %>
+                <%= link_to visit.place_name, visit.url, target: "_blank", rel: "noopener", class: "underline-offset-4 hover:underline" %>
+              <% else %>
+                <%= visit.place_name %>
+              <% end %>
+            </p>
+            <p class="truncate text-sm text-steel">
+              🚉 <%= station_label(@labels[visit.group_code]) %>
+              <% if visit.genre.present? %> · <%= place_genre(visit.genre) %><% end %>
+            </p>
+            <p class="text-sm text-steel">
+              <%= visit.visited_on.strftime(t("visits.date_format")) %>
+              <% if visit.logged_by.present? %> · <%= t(".logged_by", name: visit.logged_by) %><% end %>
+            </p>
+          </div>
+          <% if @my_seat %>
+            <%= button_to t(".remove_visit"), crew_visit_path(@crew, visit), method: :delete,
+                  form: { data: { turbo_confirm: t(".remove_confirm", place: visit.place_name) } },
+                  class: "press shrink-0 cursor-pointer text-sm font-bold text-steel underline underline-offset-4" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>

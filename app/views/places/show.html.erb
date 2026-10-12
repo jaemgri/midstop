@@ -1,4 +1,6 @@
 <%= turbo_frame_tag(turbo_frame_request_id || "nearby") do %>
+  <% card = { station_name: @station[:name], crew: @crew, visited: @visited, station_code: @group_code } %>
+
   <% if params[:compact].present? %>
     <%# Top 3 for a carousel slide: favourites first (they lead the list), then nearest %>
     <% if @places.nil? %>
@@ -8,16 +10,16 @@
       <% if picks.empty? %>
         <p class="mt-3 text-steel">
           <%= t(".empty") %>
-          <%= link_to t(".show_everything"), places_path(@group_code, budget: "any"),
+          <%= link_to t(".show_everything"), places_path(@group_code, **places_params(budget: "any")),
                 class: "font-bold text-ink underline underline-offset-4" %>
         </p>
       <% else %>
         <ul class="divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
           <% picks.each do |place| %>
-            <%= render "places/place", place: place, station_name: @station[:name] %>
+            <%= render "places/place", place: place, **card %>
           <% end %>
         </ul>
-        <%= link_to t(".see_more"), places_path(@group_code),
+        <%= link_to t(".see_more"), places_path(@group_code, **places_params),
               class: "press mt-3 inline-block font-bold underline underline-offset-4" %>
       <% end %>
     <% end %>
@@ -27,7 +29,7 @@
       <% [nil, *NearbyPlaces::FILTERS.keys].each do |filter| %>
         <% active = @filter == filter && @query.blank? %>
         <%= link_to t(".filters.#{filter || "all"}"),
-              places_path(@group_code, type: filter, budget: params[:budget].presence),
+              places_path(@group_code, **places_params(type: filter)),
               aria: { current: active ? "true" : nil },
               class: "press shrink-0 rounded-full border-2 px-4 py-2 font-bold #{active ? "border-ink bg-ink text-sign" : "border-rail bg-sign"}" %>
       <% end %>
@@ -39,7 +41,7 @@
         <% [nil, *DeviceMemory::BUDGETS].each do |amount| %>
           <% active = @budget == amount %>
           <%= link_to (amount ? t(".budget_upto", amount: number_with_delimiter(amount)) : t(".budget_any")),
-                places_path(@group_code, type: @filter, q: @query.presence, budget: amount || "any"),
+                places_path(@group_code, **places_params(type: @filter, q: @query.presence, budget: amount || "any")),
                 aria: { current: active ? "true" : nil },
                 class: "press shrink-0 rounded-full border-2 px-3 py-1 text-sm font-bold #{active ? "border-ink bg-ink text-sign" : "border-rail bg-sign"}" %>
         <% end %>
@@ -48,7 +50,9 @@
 
     <%# Keyword search %>
     <%= form_with url: places_path(@group_code), method: :get, role: "search", class: "mt-4 flex gap-2" do %>
-      <%= hidden_field_tag :budget, params[:budget] if params[:budget].present? %>
+      <% places_params.each do |name, value| %>
+        <%= hidden_field_tag name, value, id: nil %>
+      <% end %>
       <%= label_tag :q, t(".search_label"), class: "sr-only" %>
       <%= search_field_tag :q, @query, placeholder: t(".search_placeholder"), autocomplete: "off",
             class: "min-w-0 flex-1 rounded-full border-2 border-rail bg-sign px-5 py-3 placeholder:text-steel focus:border-ink focus:outline-none" %>
@@ -61,7 +65,7 @@
     <% elsif @places.empty? %>
       <p class="mt-6 text-steel">
         <%= t(".empty") %>
-        <%= link_to t(".show_everything"), places_path(@group_code, budget: "any"),
+        <%= link_to t(".show_everything"), places_path(@group_code, **places_params(budget: "any")),
               class: "font-bold text-ink underline underline-offset-4" %>
       </p>
     <% else %>
@@ -70,7 +74,7 @@
           <h4 class="mb-2 text-sm font-bold text-steel"><%= t(".headings.#{heading}") %></h4>
           <ul class="divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
             <% places.each do |place| %>
-              <%= render "places/place", place: place, station_name: @station[:name] %>
+              <%= render "places/place", place: place, **card %>
             <% end %>
           </ul>
         </section>

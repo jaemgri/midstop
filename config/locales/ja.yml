@@ -19,6 +19,16 @@ ja:
     recent: 履歴
     you: マイページ
 
+  visits:
+    went_here: ここ行った ✓
+    logged_short: 記録したよ
+    been_here: "行ったことある・%{date}"
+    date_format: "%Y年%-m月%-d日"
+    create:
+      logged: "%{place}を記録したよ ✓"
+    destroy:
+      removed: 履歴から消したよ。
+
   preferences:
     update:
       saved: 保存したよ ✌️
@@ -56,6 +66,14 @@ ja:
       you: "（自分）"
       open_seat: 空いてる席
       your_name: 名前
+      history: 行った場所 📍
+      no_history: まだないよ。集合場所を探して、行ったお店で「ここ行った」を押してね。
+      history_count:
+        one: これまで1か所
+        other: "これまで%{count}か所"
+      logged_by: "%{name}が記録"
+      remove_visit: 消す
+      remove_confirm: "%{place}を履歴から消す？"
       thats_me: これ自分
       leave: 抜ける
       leave_confirm: このクルーを抜ける？席は空いて、ほかの人が入れるようになるよ。
@@ -101,6 +119,7 @@ ja:
       copy: リンクをコピー
       copied: コピーしたよ
       copy_failed: コピーできなかった
+      crew_mode: "%{crew}で計画中 👥 行ったお店で「ここ行った」を押すと履歴に残るよ。"
       everyones_trip: みんなの移動
       already_there: 移動なし 🏠
       minutes: "%{count}分"

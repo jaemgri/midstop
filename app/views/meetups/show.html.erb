@@ -35,6 +35,12 @@
           class: "btn-pop-light press rounded-full px-5 py-2 font-black" %>
   </div>
 
+  <% if @crew %>
+    <p class="mt-6 rounded-2xl border-2 border-ink bg-tactile px-4 py-3 font-bold text-on-tactile">
+      <%= t(".crew_mode", crew: @crew.name) %>
+    </p>
+  <% end %>
+
   <%# The station carousel %>
   <section data-controller="carousel"
            data-action="keydown->carousel#keydown"

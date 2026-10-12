@@ -3,6 +3,7 @@ class Crew < ApplicationRecord
 
   has_secure_token :token
   has_many :members, -> { order(:id) }, class_name: "CrewMember", dependent: :destroy, inverse_of: :crew
+  has_many :visits, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 40 }
   validates :members, length: { minimum: 2, maximum: MAX_SEATS }

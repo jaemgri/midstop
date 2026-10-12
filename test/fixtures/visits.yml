@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  crew: one
+  group_code: 1
+  place_name: MyString
+  genre: MyString
+  budget: MyString
+  url: MyString
+  photo: MyString
+  logged_by: MyString
+  visited_on: 2026-10-12
+
+two:
+  crew: two
+  group_code: 1
+  place_name: MyString
+  genre: MyString
+  budget: MyString
+  url: MyString
+  photo: MyString
+  logged_by: MyString
+  visited_on: 2026-10-12

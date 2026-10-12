@@ -15,3 +15,10 @@ private
   def crew_token_from(value)
     value.to_s[/\A[A-Za-z0-9]+/]
   end
+
+  def crew_in_context
+    return nil if params[:crew].blank?
+
+    crew = Crew.includes(:members).find_by(token: crew_token_from(params[:crew]))
+    crew if crew && my_seat_in(crew)
+  end

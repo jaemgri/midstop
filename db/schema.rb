@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_094146) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_12_054706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,5 +74,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_094146) do
     t.index ["search_key"], name: "index_stations_on_search_key"
   end
 
+  create_table "visits", force: :cascade do |t|
+    t.bigint "crew_id", null: false
+    t.integer "group_code", null: false
+    t.string "place_name", null: false
+    t.string "genre"
+    t.string "budget"
+    t.string "url"
+    t.string "photo"
+    t.string "logged_by"
+    t.date "visited_on", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crew_id", "group_code", "place_name"], name: "index_visits_on_crew_id_and_group_code_and_place_name"
+    t.index ["crew_id"], name: "index_visits_on_crew_id"
+  end
+
   add_foreign_key "crew_members", "crews"
+  add_foreign_key "visits", "crews"
 end

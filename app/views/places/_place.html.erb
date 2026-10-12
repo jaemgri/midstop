@@ -1,3 +1,6 @@
+<%# locals: place, station_name, and in crew mode: crew, visited, station_code %>
+<% crew = local_assigns[:crew] %>
+
 <li>
   <%= link_to place_link(place, station_name), target: "_blank", rel: "noopener",
         class: "press flex items-start gap-3 px-5 py-4 hover:bg-platform focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink" do %>
@@ -25,7 +28,20 @@
     </span>
   <% end %>
 
-  <div class="flex flex-wrap items-start gap-x-5 gap-y-1 px-5 pb-3 text-sm text-steel <%= "pl-26" if place.photo.present? %>">
+  <div class="flex flex-wrap items-start gap-x-5 gap-y-2 px-5 pb-3 text-sm text-steel <%= "pl-26" if place.photo.present? %>">
+    <% if crew %>
+      <% if (last_visit = local_assigns[:visited]&.[](place.name)) %>
+        <span class="font-bold text-ink">✓ <%= t("visits.been_here", date: last_visit.strftime(t("visits.date_format"))) %></span>
+      <% else %>
+        <% button_id = "visit-#{station_code}-#{Digest::MD5.hexdigest(place.name)}" %>
+        <%= button_to t("visits.went_here"), crew_visits_path(crew),
+              params: { group_code: station_code, place_name: place.name, genre: place.genre,
+                        budget_band: place.budget, url: place.url, photo: place.photo, button_id: button_id }.compact,
+              form: { id: button_id, class: "contents" },
+              class: "press cursor-pointer rounded-full border-2 border-ink bg-tactile px-3 py-0.5 font-bold text-on-tactile" %>
+      <% end %>
+    <% end %>
+
     <% if place.lat && place.lon %>
       <%= link_to place_map_link(place), target: "_blank", rel: "noopener",
             class: "press font-bold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink" do %>

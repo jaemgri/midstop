@@ -5,6 +5,10 @@ module PlacesHelper
       "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode("#{place.name} #{station_name}")}"
   end
 
+  def places_params(**extra)
+    { budget: params[:budget].presence, crew: params[:crew].presence }.merge(extra).compact
+  end
+
   # Opens Google Maps on the place (the app on phones that have it)
   def place_map_link(place)
     query = place.address.present? ? "#{place.name} #{place.address}" : "#{place.lat},#{place.lon}"
