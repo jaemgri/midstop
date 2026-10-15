@@ -10,6 +10,9 @@
     <% end %>
 
     <span class="min-w-0 flex-1">
+      <% if local_assigns[:reason].present? %>
+        <span class="mb-1.5 incline-block rounded-lg bg-tactile px-2 py-0.5 text-sm font-bold text-on-tactile">✨ <%= reason %></span>
+      <% end %>
       <span class="flex items-baseline justify-between gap-3">
         <span class="font-bold leading-snug"><%= place.name %></span>
         <span class="shrink-0 text-sm text-steel"><%= t("places.place.walk", count: place.walk_minutes) %></span>

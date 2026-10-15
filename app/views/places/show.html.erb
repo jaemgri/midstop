@@ -18,6 +18,15 @@
           <% picks.each do |place| %>
             <%= render "places/place", place: place, **card %>
           <% end %>
+        <% if @crew && CrewPicks.available? %>
+          <%= turbo_frame_tag "picks-#{@group_code}", class: "group block" do %>
+            <%= link_to crew_p Zicks_path(@crew, @group_code),
+                  class: "btn-pop press mb-4 inline-block rounded-full px-5 py-2 font-black" do %>
+              <span class="group-aria-busy:hidden"><%= t(".pick_for_us") %></span>
+              <span class="hidden group-aria-busy:inline"><%= t(".thinking") %></span>
+            <% end %>
+          <% end %>
+        <% end %>
         </ul>
         <%= link_to t(".see_more"), places_path(@group_code, **places_params),
               class: "press mt-3 inline-block font-bold underline underline-offset-4" %>

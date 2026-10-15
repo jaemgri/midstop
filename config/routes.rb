@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "spots/:group_code", to: "spots#show", as: :spot
   patch "you/language", to: "locales#update", as: :locale
   patch "you/preferences", to: "preferences#update", as: :preferences
+  get "crews/:crew_token/picks/:group_code", to: "crew_picks#show", as: :crew_picks
 
   resources :crews, only: [:new, :create, :show], param: :token do
     resources :seats, only: [:update, :destroy], controller: "crew_seats"

@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "picks-#{@group_code}" do %>
+  <div class="mb-4 rounded-2xl border-2 border-ink bg-sign p-4">
+    <h4 class="font-black"><%= t(".title") %></h4>
+
+    <% if @picks.nil? %>
+      <p class="mt-2 text-steel"><%= t(".error") %></p>
+    <% elsif @picks.empty? %>
+      <p class="mt-2 text-steel"><%= t(".none") %></p>
+    <% else %>
+      <ul class="mt-3 divide-y-2 divide-rail overflow-hidden rounded-2xl border-2 border-rail bg-sign">
+        <% @picks.each do |place, reason| %>
+          <%= render "places/place", place: place, reason: reason, station_name: @station[:name],
+                crew: @crew, visited: @visited, station_code: @group_code %>
+        <% end %>
+      </ul>
+      <p class="mt-3 text-xs text-steel"><%= t(".disclaimer") %></p>
+    <% end %>
+  </div>
+<% end %>
