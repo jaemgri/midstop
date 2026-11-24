@@ -138,6 +138,13 @@ ja:
       rank_tie: "%{n}位・最長の移動は同じ"
       rank_other: "%{n}位・最長の移動が+%{extra}分"
 
+  crew_picks:
+    show:
+      title: ✨ midstopのおすすめ
+      error: 今はおすすめを出せなかった。少し待ってからもう一回試してね 🙏
+      none: 近くに選べるお店が足りないみたい。
+      disclaimer: ホットペッパーの情報とクルーの履歴からAIが選んだよ。行く前に営業時間をチェックしてね。
+
   places:
     place:
       walk: "徒歩%{count}分"
@@ -159,6 +166,8 @@ ja:
       search_placeholder: 検索　例：寿司、焼き鳥、バーガー
       go: 検索
       see_more: もっと見る →
+      pick_for_us: ✨ 3つ選んで
+      thinking: ✨ 考え中…
       headings:
         for_you: あなた向け ✨
         food: ごはん
@@ -179,11 +188,11 @@ ja:
       empty_title: まだ何も保存してないよ
       empty_text: 結果から、よく行く駅に★をつけたり、いつメンを保存したりできるよ。ここに並ぶよ。
       plan: 集合場所を探す
-      crews: いつメン
+      crews: 保存した検索
       remove: 削除
       remove_label: "%{name}を削除"
       find: 集合場所を探す
-      no_crews: 結果からいつメンを保存すると、ワンタップでまた探せるよ。
+      no_crews: 結果から検索を保存すると、ワンタップでもう一回探せるよ。
       spots: よく行く駅
       no_spots: 結果から集合場所に★をつけると、ここに保存されるよ。
       your_crews: あなたのクルー 👥
@@ -195,7 +204,7 @@ ja:
 
   saved_groups:
     form:
-      save_crew: いつメンとして保存
+      save_crew: 検索を保存
       placeholder: 名前をつける（例：大学の友達）
       save: 保存
     saved:

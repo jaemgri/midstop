@@ -156,6 +156,8 @@ en:
       budget_any: any budget
       budget_upto: "up to ¥%{amount}"
       see_more: see more places →
+      pick_for_us: ✨ pick 3 for us
+      thinking: ✨ thinking…
       search_label: search places
       search_placeholder: search, e.g. sushi, 焼き鳥, burger
       go: go
@@ -173,17 +175,24 @@ en:
       show_everything: show everything
       unavailable: couldn't load places right now. try again in a bit 🙏
 
+  crew_picks:
+    show:
+      title: ✨ midstop's picks for your crew
+      error: couldn't come up with picks right now. try again in a bit 🙏
+      none: not enough places nearby to pick from.
+      disclaimer: picked by AI from Hot Pepper listings and your crew's history. double-check hours before you go.
+
   saved:
     index:
       title: saved
       empty_title: nothing saved yet
       empty_text: star your go-to spots and save your crews from any result. they'll live here.
       plan: plan a meetup
-      crews: your crews
+      crews: saved searches
       remove: remove
       remove_label: "Remove %{name}"
       find: find our spot
-      no_crews: save the crew from any result to re-run it in one tap.
+      no_crews: save a search from any result to re-run it in one tap.
       spots: go-to spots
       no_spots: star a meeting spot from any result to keep it here.
       your_crews: your crews 👥
@@ -195,14 +204,14 @@ en:
 
   saved_groups:
     form:
-      save_crew: save this crew
+      save_crew: save search
       placeholder: name it, e.g. uni crew
       save: save
     saved:
       text_html: "saved as %{name} ✌️ find it in %{link}."
       link: saved
     create:
-      default_name: my crew
+      default_name: my search
 
   recents:
     index:
